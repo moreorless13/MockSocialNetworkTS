@@ -20,7 +20,8 @@ async function startApolloServer() {
         typeDefs,
         resolvers,
         context: authMiddleware,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+        csrfPrevention: true
     })
 
     await server.start()
