@@ -1,7 +1,7 @@
 import { AuthenticationError } from "apollo-server-core";
 import { GraphQLScalarType, Kind } from "graphql";
 import User from '../models/User';
-import { signToken } from "../utils/auth";
+import { signToken, authorizedUser } from "../utils/auth";
 import * as bcrypt from 'bcrypt';
 import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
 
@@ -25,11 +25,14 @@ const dateScalar = new GraphQLScalarType({
 const resolvers = {
     Date: dateScalar,
     Query: {
-        users: async () => {
+        users: async (parent: unknown, args: any, context: any) => {
+            if (context.user.data.role !== 'Admin') {
+                throw new AuthenticationError('You are not authorized!')
+            }
             return await User.find()
         },
         user: async (parent: unknown, { userId }: any) => {
-            const user = await User.findByIdAndUpdate({ _id: userId }, { $set: { accountStatus: 'Active ' } }, { new: true });
+            const user = await User.findByIdAndUpdate({ _id: userId }, { $set: { accountStatus: 'Active' } }, { new: true });
             return user;
         }
     },
@@ -52,9 +55,9 @@ const resolvers = {
         login: async (parent: unknown, { username, password }: any) => {
             try {
                 const user = await User.findOne({ username });
-                // if (user?.accountStatus !== 'Active') {
-                //     throw new AuthenticationError('Please check your email for account confirmation.')
-                // }
+                if (user?.accountStatus !== 'Active') {
+                    throw new AuthenticationError('Please check your email for account confirmation.')
+                }
                 if (!user) {
                     throw new AuthenticationError('User does not exist')
                 } else {
@@ -64,10 +67,17 @@ const resolvers = {
                         throw new AuthenticationError('Invalid credentials')
                     }
 
-                    const token = signToken(user);
-                    console.log(user)
-                    console.log(`${user.username} logged in`)
-                    return { token, user }
+                    if (user.role === 'Admin') {
+                        const token = authorizedUser(user);
+                        console.log(user)
+                        return { token, user }
+                    } else {
+                        const token = signToken(user)
+                        console.log(user)
+                        console.log(`${user.username} logged in`)
+                        return { token, user }
+                    }
+                    
                 }
             } catch (error) {
                 console.error(error)
@@ -87,7 +97,8 @@ const resolvers = {
                     throw new AuthenticationError('You must enter correct password!')
                 } else {
                     user.password = newPassword;
-                    user.save();
+                    await user.save({ timestamps: true });
+                    
                     return user
                 }
             } catch (error) {

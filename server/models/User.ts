@@ -1,8 +1,6 @@
 
 import { Schema, model, Types, Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt'
-import { nextTick } from 'process';
-import { NextFunction } from 'express';
 
 export interface IUser {
     _id: Types.ObjectId;
@@ -11,8 +9,7 @@ export interface IUser {
     password: string;
     dateOfBirth: Date;
     accountStatus: string;
-    role: string;
-    createdAt: Date;
+    role: string; 
 }
 
 interface UserMethods {
@@ -31,9 +28,8 @@ const schema = new Schema<IUser, UserModel, UserMethods>({
         enum: ['Pending', 'Active'],
         default: 'Pending'
     },
-    role: { type: String, required: true, enum: ['Admin', 'User'], default: 'User' },
-    createdAt: { type: Date, required: true, default: Date.now }
-})
+    role: { type: String, required: true, enum: ['Admin', 'User'], default: 'User' },    
+}, { timestamps: true });
 
 schema.pre('save', async function (next: any) {
     if(this.isNew || this.isModified('password')) {

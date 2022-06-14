@@ -7,6 +7,7 @@ const secret = sanitizedConfig.SECRET;
 const expiration = sanitizedConfig.EXPIRATION;
 
 export const authMiddleware = async ({ req }: any) => {
+    // console.log(req)
     let token = req.body.token || req.query.token || req.headers.authorization;
     if (req.headers.authorization) {
         token = token.split(' ').pop().trim();
@@ -30,3 +31,8 @@ export const signToken = ({ username, email, _id }: any) => {
     const payload = { username, email, _id };
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration })
 };
+
+export const authorizedUser = ({ username, email, _id, role}: any) => {
+    const payload = { username, email, _id, role};
+    return jwt.sign({ data: payload }, secret, { expiresIn: expiration })
+}

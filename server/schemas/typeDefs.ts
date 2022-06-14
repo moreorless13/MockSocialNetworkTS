@@ -11,7 +11,6 @@ const typeDefs = gql`
         dateOfBirth: Date!
         accountStatus: String!
         role: String!
-        createdAt: Date!
     }
 
     type Auth {
