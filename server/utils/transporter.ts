@@ -10,7 +10,7 @@ export const sendConfirmationEmail = (username: string, email: string, userId: T
     const transporter = nodemailer.createTransport({
         host: sanitizedConfig.HOST,
         port: sanitizedConfig.TRANSPORTPORT,
-        secure: true,
+        secure: false,
         auth: {
             user: sanitizedConfig.USER,
             pass: sanitizedConfig.PASS
@@ -33,7 +33,7 @@ export const sendForgotPasswordEmail = (email: string, userId: Types.ObjectId) =
     const transporter = nodemailer.createTransport({
         host: sanitizedConfig.HOST,
         port: sanitizedConfig.TRANSPORTPORT,
-        secure: true,
+        secure: false,
         auth: {
             user: sanitizedConfig.USER,
             pass: sanitizedConfig.PASS
