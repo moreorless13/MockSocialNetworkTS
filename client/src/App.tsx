@@ -6,6 +6,7 @@ import HomePage from './pages/Home';
 import SignupForm from './components/forms/SignUpForm';
 import ForgotPasswordForm from './components/forms/ForgotPasswordForm';
 import LoginForm from './components/forms/LoginForm';
+import VerifyUser from './pages/VerifyUser';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -38,6 +39,7 @@ function App() {
             <Route exact path='/signup' component={SignupForm} />
             <Route exact path='/forgotPassword' component={ForgotPasswordForm} />
             <Route exact path='/login' component={LoginForm} />
+            <Route exact path='/confirm/:userId' component={VerifyUser} />
           </Switch>
         </div>
       </Router>
