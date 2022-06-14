@@ -115,6 +115,22 @@ const resolvers = {
             } catch (error) {
                 console.error(error)  
             }
+        },
+        removeUser: async (parent: unknown, { username, password}: any, context: any) => {
+            try {
+                if (context.user) {
+                    const user = await User.findById({ _id: context.user.data._id });
+                    console.log(user)
+                    const correctPassword = await user?.isCorrectPassword(password);
+                    if (!correctPassword || username !== user?.username) {
+                        throw new AuthenticationError('Must provide correct credentials to delete account!')
+                    } else {
+                        return await User.findByIdAndDelete({ _id: context.user.data._id })
+                    }
+                }
+            } catch (error) {
+                console.error(error)
+            }
         }
     }
 };

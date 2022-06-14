@@ -7,7 +7,6 @@ const secret = sanitizedConfig.SECRET;
 const expiration = sanitizedConfig.EXPIRATION;
 
 export const authMiddleware = async ({ req }: any) => {
-    // console.log(req)
     let token = req.body.token || req.query.token || req.headers.authorization;
     if (req.headers.authorization) {
         token = token.split(' ').pop().trim();

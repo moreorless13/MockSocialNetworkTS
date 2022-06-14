@@ -38,3 +38,11 @@ export const UPDATE_PASSWORD = gql`
         }
     }
 `
+
+export const REMOVE_USER = gql`
+    mutation removeUser($username: String!, $password: String!) {
+        removeUser(username: $username, password: $password) {
+            _id
+        }
+    }
+`

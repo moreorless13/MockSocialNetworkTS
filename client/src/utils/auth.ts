@@ -34,7 +34,7 @@ class AuthService {
     login(token: any) {
         cookies.set('id_token', token)
         localStorage.setItem('id_token', token);
-        window.location.assign('/dashboard');
+        window.location.reload();
     }
     logout() {
         cookies.remove('id_token')
