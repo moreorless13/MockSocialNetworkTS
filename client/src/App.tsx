@@ -2,6 +2,10 @@ import React from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import HomePage from './pages/Home';
+import SignupForm from './components/forms/SignUpForm';
+import ForgotPasswordForm from './components/forms/ForgotPasswordForm';
+import LoginForm from './components/forms/LoginForm';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -29,7 +33,12 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <div className='container-fluid'>
-          
+          <Switch>
+            <Route exact path='/' component={HomePage} />
+            <Route exact path='/signup' component={SignupForm} />
+            <Route exact path='/forgotPassword' component={ForgotPasswordForm} />
+            <Route exact path='/login' component={LoginForm} />
+          </Switch>
         </div>
       </Router>
     </ApolloProvider>

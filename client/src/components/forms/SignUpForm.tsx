@@ -61,7 +61,7 @@ const SignupForm = () => {
             position: 'absolute', top: '30%', 
         }}>
 
-            <Link to="/login">← Go to Login</Link>
+            
             {/* This is needed for the validation functionality above */}
             <Form   noValidate validated={validated} onSubmit={handleFormSubmit}>
                 {/* show alert if server response is bad */}
@@ -135,7 +135,8 @@ const SignupForm = () => {
                     !(
                     userFormData.username &&
                     userFormData.email &&
-                    userFormData.password
+                    userFormData.password &&
+                    userFormData.dateOfBirth
                     )
                 }
                 type="submit"
@@ -144,6 +145,11 @@ const SignupForm = () => {
                 Submit
                 </Button>
             </Form>
+            <div>
+                <Link to="/login">← Go to Login</Link>
+                <br />
+                <Link to='/forgotPassword'>Forgot Password?</Link>
+            </div>
         </div>
     )
 }

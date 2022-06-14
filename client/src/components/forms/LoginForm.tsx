@@ -1,11 +1,11 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Alert, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../../utils/mutations';
 import Auth from '../../utils/auth';
 
-const Login = (props: any) => {
+const LoginForm = () => {
     const [userFormData, setUserFormData] = useState({ username: '', password: '' });
     const [validated] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
@@ -37,7 +37,6 @@ const Login = (props: any) => {
             const { data } = await login({
                 variables: { ...userFormData },
             });
-            console.log(data)
             Auth.login(data.login.token);
         } catch (error) {
             console.error(error);
@@ -67,9 +66,11 @@ const Login = (props: any) => {
                     <Form.Control type='password' placeholder='Password' name='password' onChange={handleInputChange} value={userFormData.password} required />
                     <Form.Control.Feedback type='invalid'>Password is required!</Form.Control.Feedback>
                 </Form.Group>
+                <br />
                 <Button  className='padding bg-dark rounded' disabled={!(userFormData.username && userFormData.password)} type='submit' variant='success'>Submit</Button>
             </Form>
 
+            
             <Link to="/signup">← Go to Signup</Link>
             <br />
             <br />
@@ -79,4 +80,4 @@ const Login = (props: any) => {
     );
 }
 
-export default Login;
+export default LoginForm;
