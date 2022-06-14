@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import { FORGOT_PASSWORD } from '../../utils/mutations';
 import { useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,10 @@ const ForgotPasswordForm = () => {
     const [validated] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [forgotPassword, { error }] = useMutation(FORGOT_PASSWORD);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleShowModal = () => setShowModal(true)
+    const handleCloseModal = () => setShowModal(false)
 
     useEffect(() => {
         if (error) {
@@ -34,24 +38,30 @@ const ForgotPasswordForm = () => {
             console.error(error)
             setShowAlert(true)            
         }
-
         setUserFormData({ email: '' });
     }
 
     return (
-        <div className="container bg-warning rounded pt-2 pb-2">
-            <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
-                <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'></Alert>
-                <Form.Group>
-                    <Form.Label htmlFor='email'>Account Email Address</Form.Label>
-                    <Form.Control type="email" placeholder='Account Email Address' name='email' onChange={handleInputChange} value={userFormData.email} required />
-                    <Form.Control.Feedback type="invalid">Email Address Required</Form.Control.Feedback>
-                </Form.Group>
-                <br />
-                <Button className='padding bg-dark' disabled={!userFormData.email} type='submit' variant='success'>Submit</Button>
-            </Form>
-            <br />
-            <Link to="/login">← Go to Login</Link>
+        <div>
+            <Button onClick={handleShowModal} variant='danger'>Forgot Password</Button>
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Form noValidate validated={validated} onSubmit={handleFormSubmit} className="container bg-warning rounded pt-2 pb-2">
+                    <Modal.Header>
+                        <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>Invalid Email Address</Alert>
+                        <i className="bi bi-file-excel-fill" onClick={handleCloseModal}></i>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group>
+                            <Form.Label htmlFor='email'>Account Email Address</Form.Label>
+                            <Form.Control type="email" placeholder='Account Email Address' name='email' onChange={handleInputChange} value={userFormData.email} required />
+                            <Form.Control.Feedback type="invalid">Email Address Required</Form.Control.Feedback>
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button className='padding bg-dark' disabled={!userFormData.email} type='submit' variant='success'>Submit</Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
         </div>
     )
 }

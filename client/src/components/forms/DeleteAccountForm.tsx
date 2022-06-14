@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client'
 import { REMOVE_USER } from '../../utils/mutations'
@@ -18,12 +18,12 @@ const DeleteAccount = () => {
         }
     }, [error]);
 
-    const handleInputChange = (e: any) => {
-        const { name, value } = e.target;
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
         setUserFormData({ ...userFormData, [name]: value });
     };
 
-    const handleFormSubmit = async (event: any) => {
+    const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget; 
         if (form.checkValidity() === false) {
@@ -50,8 +50,6 @@ const DeleteAccount = () => {
 
         window.location.assign('/')
     };
-
-    
 
     return (
         <div className="container bg-warning rounded pt-2 pb-2" style= {{

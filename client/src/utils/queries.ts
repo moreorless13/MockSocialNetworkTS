@@ -7,7 +7,6 @@ export const QUERY_USERS = gql`
             username
             email
             accountStatus
-            role
         }
     }
 `

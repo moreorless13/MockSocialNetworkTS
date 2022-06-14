@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -28,13 +28,13 @@ const SignupForm = () => {
         setUserFormData({ ...userFormData, [name]: value });
     };
 
-    const handleFormSubmit = async (event: any) => {
+    const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault()
-            event.preventPropagation()
+            event.stopPropagation()
         }
 
         try {
@@ -57,8 +57,8 @@ const SignupForm = () => {
     }
 
     return (
-        <div className="container bg-warning rounded pt-2 pb-2" style= {{
-            position: 'absolute', top: '30%', 
+        <div className="container bg-warning rounded pt-2 pb-2 col-6" style= {{
+            position: 'absolute', top: '30%', left:'30%', 
         }}>
 
             

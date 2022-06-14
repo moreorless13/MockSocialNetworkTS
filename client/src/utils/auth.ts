@@ -1,13 +1,10 @@
 import decode from 'jwt-decode'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
-
-
 class AuthService {
     getUser() {
         return decode(this.getToken())
     }
-
     loggedIn() {
         const token = this.getToken()
         return token && !this.isTokenExpired(token) ? true : false;
@@ -39,7 +36,7 @@ class AuthService {
     logout() {
         cookies.remove('id_token')
         localStorage.removeItem('id_token');
-        window.location.reload()
+        window.location.assign('/')
     }
 }
 

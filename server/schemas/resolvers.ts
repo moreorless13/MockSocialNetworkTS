@@ -25,7 +25,7 @@ const dateScalar = new GraphQLScalarType({
 const resolvers = {
     Date: dateScalar,
     Query: {
-        users: async (parent: unknown, args: any, context: any) => {
+        users: async (parent: unknown, context: any) => {
             if (context.user.data.role !== 'Admin') {
                 throw new AuthenticationError('You are not authorized!')
             }
@@ -116,7 +116,7 @@ const resolvers = {
                 console.error(error)  
             }
         },
-        removeUser: async (parent: unknown, { username, password}: any, context: any) => {
+        removeUser: async (parent: unknown, { username, password }: any, context: any) => {
             try {
                 if (context.user) {
                     const user = await User.findById({ _id: context.user.data._id });

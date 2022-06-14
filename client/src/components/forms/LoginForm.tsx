@@ -1,8 +1,9 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Form, Button, Alert, Nav } from 'react-bootstrap';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import { Form, Button, Alert, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../../utils/mutations';
+import ForgotPasswordForm from './ForgotPasswordForm';
 import Auth from '../../utils/auth';
 
 const LoginForm = () => {
@@ -25,7 +26,7 @@ const LoginForm = () => {
         setUserFormData({ ...userFormData, [name]: value });
     };
 
-    const handleFormSubmit = async (event: any) => {
+    const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget; 
         if (form.checkValidity() === false) {
@@ -67,11 +68,15 @@ const LoginForm = () => {
                     <Form.Control.Feedback type='invalid'>Password is required!</Form.Control.Feedback>
                 </Form.Group>
                 <br />
-                <Button  className='padding bg-dark rounded' disabled={!(userFormData.username && userFormData.password)} type='submit' variant='success'>Submit</Button>
+                <div className='row'>
+                    <div className='col-3'></div>
+                    <Button  className='padding bg-dark rounded col-1' disabled={!(userFormData.username && userFormData.password)} type='submit' variant='success'>Submit</Button>
+                    <ForgotPasswordForm />
+                </div>
             </Form>
 
             
-            <Link to="/signup">← Go to Signup</Link>
+            
             <br />
             <br />
 
