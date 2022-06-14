@@ -4,6 +4,7 @@ const typeDefs = gql`
     scalar Date
 
     type User {
+        _id: ID!
         username: String!
         email: String!
         password: String!
@@ -27,6 +28,9 @@ const typeDefs = gql`
     type Mutation {
         addUser(username: String!, email: String!, password: String!, dateOfBirth: Date!): Auth
         login(username: String!, password: String!): Auth
+        updatePassword(userId: ID!, oldPassword: String!, newPassword: String!, confirmationPassword: String!): User
+        forgotPassword(email: String!): User
+        removeUser(username: String!, password: String!): User
     }
 `
 

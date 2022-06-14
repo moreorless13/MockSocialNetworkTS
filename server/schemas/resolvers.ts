@@ -2,6 +2,8 @@ import { AuthenticationError } from "apollo-server-core";
 import { GraphQLScalarType, Kind } from "graphql";
 import User from '../models/User';
 import { signToken } from "../utils/auth";
+import * as bcrypt from 'bcrypt';
+import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
 
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
@@ -25,6 +27,10 @@ const resolvers = {
     Query: {
         users: async () => {
             return await User.find()
+        },
+        user: async (parent: unknown, { userId }: any) => {
+            const user = await User.findByIdAndUpdate({ _id: userId }, { $set: { accountStatus: 'Active ' } }, { new: true });
+            return user;
         }
     },
     Mutation: {
@@ -35,6 +41,7 @@ const resolvers = {
                     throw new AuthenticationError('User already exists')
                 } else {
                     const newUser = await User.create({ username, email, password, dateOfBirth });
+                    sendConfirmationEmail(username, email, newUser._id);
                     console.log(newUser)
                     return newUser
                 }
@@ -45,10 +52,14 @@ const resolvers = {
         login: async (parent: unknown, { username, password }: any) => {
             try {
                 const user = await User.findOne({ username });
+                // if (user?.accountStatus !== 'Active') {
+                //     throw new AuthenticationError('Please check your email for account confirmation.')
+                // }
                 if (!user) {
                     throw new AuthenticationError('User does not exist')
                 } else {
-                    const correctPassword = user.isCorrectPassword(password);
+                    const correctPassword = await user.isCorrectPassword(password);
+                    console.log(correctPassword)
                     if(!correctPassword){
                         throw new AuthenticationError('Invalid credentials')
                     }
@@ -60,6 +71,38 @@ const resolvers = {
                 }
             } catch (error) {
                 console.error(error)
+            }
+        },
+        updatePassword: async (parent: unknown, { userId, oldPassword, newPassword, confirmationPassword }: any, context: any) => {
+            try {
+               if (newPassword !== confirmationPassword) {
+                    throw new AuthenticationError('Passwords must match!')
+                }
+                const user = await User.findById({ _id: context.user.data._id });
+                if (!user) {
+                    throw new AuthenticationError('User does not exist')
+                } 
+                const correctPassword = user.isCorrectPassword(oldPassword)
+                if (!correctPassword) {
+                    throw new AuthenticationError('You must enter correct password!')
+                } else {
+                    user.password = newPassword;
+                    user.save();
+                    return user
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        forgotPassword: async (parent: unknown, { email }: any) => {
+            try {
+                const user = await User.findOne({ email });
+                if (!user) {
+                    throw new AuthenticationError('User with that email does not exist')
+                }
+                sendForgotPasswordEmail(email, user._id)
+            } catch (error) {
+                console.error(error)  
             }
         }
     }

@@ -1,9 +1,11 @@
 
 import { Schema, model, Types, Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt'
+import { nextTick } from 'process';
+import { NextFunction } from 'express';
 
 export interface IUser {
-    _id: ObjectId;
+    _id: Types.ObjectId;
     username: string;
     email: string;
     password: string;
