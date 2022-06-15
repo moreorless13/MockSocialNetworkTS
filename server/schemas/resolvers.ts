@@ -26,9 +26,6 @@ const resolvers = {
     Date: dateScalar,
     Query: {
         users: async (parent: unknown, context: any) => {
-            if (context.user.data.role !== 'Admin') {
-                throw new AuthenticationError('You are not authorized!')
-            }
             return await User.find()
         },
         user: async (parent: unknown, { userId }: any) => {
@@ -73,8 +70,6 @@ const resolvers = {
                         return { token, user }
                     } else {
                         const token = signToken(user)
-                        console.log(user)
-                        console.log(`${user.username} logged in`)
                         return { token, user }
                     }
                     
@@ -131,7 +126,16 @@ const resolvers = {
             } catch (error) {
                 console.error(error)
             }
-        }
+        },
+        followUser: async (parent: unknown, { userId }: any, context: any) => {
+            const user = await User.findById({ userId });
+            const me = await User.findById({ _id: context.user.data._id })
+            me?.following.addToSet(user?.id)
+            me?.save()
+            user?.followers.addToSet(me?._id)
+            user?.save()
+        },
+
     }
 };
 export default resolvers;

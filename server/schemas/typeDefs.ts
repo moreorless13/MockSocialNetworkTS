@@ -13,6 +13,12 @@ const typeDefs = gql`
         role: String!
     }
 
+    type Friends {
+        _id: ID!
+        followers: [ID]
+        following: [ID]
+    }
+
     type Auth {
         token: ID!
         user: User
@@ -30,6 +36,9 @@ const typeDefs = gql`
         updatePassword(userId: ID!, oldPassword: String!, newPassword: String!, confirmationPassword: String!): User
         forgotPassword(email: String!): User
         removeUser(username: String!, password: String!): User
+        followUser(followers: ID!): Friends
+        unfollowUser(followers: ID!): Friends
+
     }
 `
 
