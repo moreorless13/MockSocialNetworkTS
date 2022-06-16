@@ -7,6 +7,8 @@ export const QUERY_USERS = gql`
             username
             email
             accountStatus
+            followers
+            following
         }
     }
 `
@@ -16,6 +18,15 @@ export const QUERY_USER = gql`
         user(userId: $userId) {
             _id
             username
+        }
+    }
+`
+
+export const QUERY_ME = gql`
+    {
+        me {
+            username
+            email
         }
     }
 `

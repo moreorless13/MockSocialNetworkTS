@@ -1,5 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
-import autopopulate from 'mongoose-autopopulate'
+
 
 
 interface IUserInfos {

@@ -2,6 +2,14 @@ import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
     scalar Date
+    input UserInput {
+        username: String!
+        email: String!
+        password: String!
+        dateOfBirth: Date!
+        followers: ID
+        following: ID
+    }
 
     type User {
         _id: ID!
@@ -11,10 +19,6 @@ const typeDefs = gql`
         dateOfBirth: Date!
         accountStatus: String!
         role: String!
-    }
-
-    type Friends {
-        _id: ID!
         followers: [ID]
         following: [ID]
     }
@@ -36,8 +40,8 @@ const typeDefs = gql`
         updatePassword(userId: ID!, oldPassword: String!, newPassword: String!, confirmationPassword: String!): User
         forgotPassword(email: String!): User
         removeUser(username: String!, password: String!): User
-        followUser(followers: ID!): Friends
-        unfollowUser(followers: ID!): Friends
+        followUser(followers: ID): User
+        unfollowUser(following: ID): User
 
     }
 `

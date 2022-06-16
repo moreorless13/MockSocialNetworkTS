@@ -46,3 +46,19 @@ export const REMOVE_USER = gql`
         }
     }
 `
+
+export const FOLLOW_USER = gql`
+    mutation followUser($followers: ID) {
+        followUser(followers: $followers) {
+            _id
+        }
+    }
+`
+
+export const UNFOLLOW_USER = gql`
+    mutation unfollowUser($following: ID!) {
+        unfollowUser(following: $following) {
+            _id
+        }
+    }
+`

@@ -31,6 +31,13 @@ const resolvers = {
         user: async (parent: unknown, { userId }: any) => {
             const user = await User.findByIdAndUpdate({ _id: userId }, { $set: { accountStatus: 'Active' } }, { new: true });
             return user;
+        },
+        me: async (parent: unknown, args: any, context: any) => {
+            if (context.user) {
+                const user = await User.findById({ _id: context.user.data._id }).populate({ path: 'followers.user', populate: 'user' })
+                console.log(user)
+                return user
+            }
         }
     },
     Mutation: {
@@ -64,15 +71,16 @@ const resolvers = {
                         throw new AuthenticationError('Invalid credentials')
                     }
 
-                    if (user.role === 'Admin') {
-                        const token = authorizedUser(user);
-                        console.log(user)
-                        return { token, user }
-                    } else {
-                        const token = signToken(user)
-                        return { token, user }
-                    }
-                    
+                    // if (user.role === 'Admin') {
+                    //     const token = authorizedUser(user);
+                    //     console.log(user)
+                    //     return { token, user }
+                    // } else {
+                    //     const token = signToken(user)
+                    //     return { token, user }
+                    // }
+                    const token = signToken(user)
+                    return { token, user }
                 }
             } catch (error) {
                 console.error(error)
@@ -127,14 +135,29 @@ const resolvers = {
                 console.error(error)
             }
         },
-        followUser: async (parent: unknown, { userId }: any, context: any) => {
-            const user = await User.findById({ userId });
+        followUser: async (parent: unknown, { followers }: any, context: any) => {
+            console.log(followers)
+            console.log(context.user)
+            const user = await User.findById(followers);
+            console.log('this is the user to follow ', user)
             const me = await User.findById({ _id: context.user.data._id })
+            console.log('this is me', me)
             me?.following.addToSet(user?.id)
             me?.save()
             user?.followers.addToSet(me?._id)
             user?.save()
+            console.log('people I follow', me?.following)
+            console.log('users followers', user?.followers)
+            return me;
         },
+        unfollowUser: async (parent: unknown, { following }: any, context: any) => {
+            const user = await User.findById(following);
+            console.log('user to unfollow', user)
+            const me = await User.findById({ _id: context.user.data._id })
+            console.log('me', me)
+            me?.following.find(following)?.remove(following)
+            return me;
+        }
 
     }
 };
