@@ -27,6 +27,9 @@ export const QUERY_ME = gql`
         me {
             username
             email
+            dateOfBirth
+            followers
+            following
         }
     }
 `
