@@ -1,7 +1,6 @@
 
-import { Schema, model, Types, Model, ObjectId } from 'mongoose';
+import { Schema, model, Types, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
-import mongooseAutoPopulate from 'mongoose-autopopulate';
 
 export interface Ifollowers {
     _id: string;

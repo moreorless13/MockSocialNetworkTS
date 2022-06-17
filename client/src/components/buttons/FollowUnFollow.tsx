@@ -7,7 +7,6 @@ const FollowUserButton = ({ _id }: any) => {
     const [disabled, setDisabled] = useState(false);
     const [followUser, { error }] = useMutation(FOLLOW_USER);
 
-    
     useEffect(() => {
         if (error) {
             setDisabled(true);
@@ -18,7 +17,6 @@ const FollowUserButton = ({ _id }: any) => {
 
     const handleFollowClick = async (event: any) => {
         event.preventDefault()
-        console.log(_id)
         try {
             const { data } = await followUser({
                 variables: { _id: _id }  
