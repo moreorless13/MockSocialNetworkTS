@@ -1,6 +1,5 @@
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import nodemailer from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
 import sanitizedConfig from '../config';
 export const sendConfirmationEmail = (username: string, email: string, userId: Types.ObjectId) => {
     const transporter = nodemailer.createTransport({

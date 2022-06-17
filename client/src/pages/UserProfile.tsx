@@ -35,7 +35,7 @@ const UserProfile = () => {
         <Jumbotron>
             <div className='row justify-content-center'>Welcome to {user?.username}'s Profile Page</div>
             <Nav></Nav>
-            
+            <div className='row justify-content-center'>{user?.username}'s Followers: </div>
             <div className='row justify-content-center'>{userFollowers}</div> 
         </Jumbotron>
     )

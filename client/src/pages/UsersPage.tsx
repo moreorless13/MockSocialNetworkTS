@@ -19,11 +19,17 @@ const UsersPage = () => {
 
     const myFollowers = me?.followers.map((follower: any) => {
         console.log(follower)
+        const handleClick = (event: any) => {
+            event.preventDefault();
+            window.location.assign(`/profile/${follower._id}`)
+        }
         return (
             <Card className='col-2'>
                 <Card.Body>
                     <Card.Title>{follower.username}</Card.Title>
                     <Card.Subtitle>{follower.email}</Card.Subtitle>
+                    <br />
+                    <Button onClick={handleClick}>{follower?.username}'s Profile</Button>
                 </Card.Body>
                 <Card.Footer><RemoveFollowerButton _id={follower?._id} /></Card.Footer>
             </Card>
@@ -32,11 +38,17 @@ const UsersPage = () => {
 
     const whoIFollow = me?.following.map((following: any) => {
         console.log(following)
+        const handleClick = (event: any) => {
+            event.preventDefault();
+            window.location.assign(`/profile/${following._id}`)
+        }
         return (
             <Card className='col-2'>
                 <Card.Body>
                     <Card.Title>{following.username}</Card.Title>
                     <Card.Subtitle>{following.email}</Card.Subtitle>
+                    <br />
+                    <Button onClick={handleClick}>{following?.username}'s Profile</Button>
                 </Card.Body>
                 <Card.Footer><UnfollowUserButton _id={following?._id} /></Card.Footer>
             </Card>

@@ -180,11 +180,16 @@ const resolvers = {
             console.log('this is the user', user?.username)
             const me = await User.findById({ _id: context.user.data._id })
             console.log('this is me', me)
-            me?.following?.push({ _id: user?._id, username: user?.username, email: user?.email })
-            me?.save()
-            user?.followers?.push({ _id: me?._id, username: me?.username, email: me?.email});
-            user?.save()
-            return { user, me };
+            if (me?.following.id(user?._id)){
+                console.log('you already follow this user')
+                return { user, me }
+            } else {
+                me?.following?.push({ _id: user?._id, username: user?.username, email: user?.email })
+                me?.save()
+                user?.followers?.push({ _id: me?._id, username: me?.username, email: me?.email});
+                user?.save()
+                return { user, me };
+            }
         },
         unfollowUser: async (parent: unknown, _id: any, context: any) => {
             const user = await User.findOne({ _id: _id });

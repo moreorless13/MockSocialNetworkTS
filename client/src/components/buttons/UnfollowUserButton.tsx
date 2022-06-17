@@ -29,7 +29,7 @@ const UnfollowUserButton = ({ _id }: any) => {
 
     return (
         <div>
-            <Button variant='primary' onClick={handleUnfollowClick} disabled={disabled}>Unfollow</Button>
+            <Button variant='danger' onClick={handleUnfollowClick} disabled={disabled}>Unfollow</Button>
         </div>
     )
 }
