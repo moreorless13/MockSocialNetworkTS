@@ -3,6 +3,9 @@ import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@ap
 import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import HomePage from './pages/Home';
+import NavigationBar from './components/Nav';
+import NavBar from './components/NavBar';
+import UsersPage from './pages/UsersPage';
 import SignupForm from './components/forms/SignUpForm';
 import ForgotPasswordForm from './components/forms/ForgotPasswordForm';
 import LoginForm from './components/forms/LoginForm';
@@ -34,13 +37,19 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <div className='container-fluid'>
-          <Switch>
-            <Route exact path='/' component={HomePage} />
-            <Route exact path='/signup' component={SignupForm} />
-            <Route exact path='/forgotPassword' component={ForgotPasswordForm} />
-            <Route exact path='/login' component={LoginForm} />
-            <Route exact path='/confirm/:userId' component={VerifyUser} />
-          </Switch>
+          <div className='container-fluid'>
+            <NavigationBar />
+          </div>
+          <div className='container-fluid'>
+            <Switch>
+              <Route exact path='/' component={HomePage} />
+              <Route exact path='/userPage' component={UsersPage} />
+              <Route exact path='/signup' component={SignupForm} />
+              <Route exact path='/forgotPassword' component={ForgotPasswordForm} />
+              <Route exact path='/login' component={LoginForm} />
+              <Route exact path='/confirm/:userId' component={VerifyUser} />
+            </Switch>
+          </div>
         </div>
       </Router>
     </ApolloProvider>

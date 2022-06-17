@@ -3,6 +3,18 @@ import { Schema, model, Types, Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt'
 import mongooseAutoPopulate from 'mongoose-autopopulate';
 
+export interface Ifollowers {
+    _id: string;
+    username: string;
+    email: string;
+}
+
+export interface Ifollowing {
+    _id: Types.ObjectId;
+    username: string;
+    email: string;
+}
+
 export interface IUser {
     _id: Types.ObjectId;
     username: string;
@@ -11,8 +23,8 @@ export interface IUser {
     dateOfBirth: Date;
     accountStatus: string;
     role: string; 
-    followers: Types.DocumentArray<IUser>;
-    following: Types.DocumentArray<IUser>;
+    followers: Types.DocumentArray<Ifollowers>;
+    following: Types.DocumentArray<Ifollowing>;
 }
 
 interface UserMethods {
@@ -32,8 +44,8 @@ const schema = new Schema<IUser, UserModel, UserMethods>({
         default: 'Pending'
     },
     role: { type: String, required: true, enum: ['Admin', 'User'], default: 'User' },  
-    followers: [{ type: Schema.Types.ObjectId, ref: 'User', mongooseAutoPopulate: true }],
-    following: [{ type: Schema.Types.ObjectId, ref: 'User', mongooseAutoPopulate: true }]
+    followers: [{ _id: String, username: String, email: String }],
+    following: [{ username: String, email: String }]
 }, { timestamps: true });
 
 schema.pre('save', async function (next: any) {

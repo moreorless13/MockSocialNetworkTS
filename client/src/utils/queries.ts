@@ -7,8 +7,16 @@ export const QUERY_USERS = gql`
             username
             email
             accountStatus
-            followers
-            following
+            followers {
+                _id
+                username
+                email
+            }
+            following {
+                _id
+                username
+                email
+            } 
         }
     }
 `
@@ -25,11 +33,30 @@ export const QUERY_USER = gql`
 export const QUERY_ME = gql`
     {
         me {
+            _id
             username
             email
             dateOfBirth
+            followers {
+                _id
+                username
+                email
+            }
+            following {
+                _id
+                username
+                email
+            }
+        }
+    }
+`
+
+export const QUERY_FOLLOWERS = gql`
+    query followers($followers: ID!) {
+        followers(followers: $followers) {
+            username
+            email
             followers
-            following
         }
     }
 `

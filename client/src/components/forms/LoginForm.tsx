@@ -81,7 +81,7 @@ const LoginForm = () => {
             <br />
             <br />
 
-            <Link to="/forgotPassword">Forgot Password?</Link>
+            <Link to="/signup">Sign up</Link>
         </div>
     );
 }

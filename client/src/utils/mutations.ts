@@ -48,17 +48,21 @@ export const REMOVE_USER = gql`
 `
 
 export const FOLLOW_USER = gql`
-    mutation followUser($followers: ID) {
-        followUser(followers: $followers) {
+    mutation followUser($_id: ID) {
+        followUser(_id: $_id) {
             _id
+            username
+            email
         }
     }
 `
 
 export const UNFOLLOW_USER = gql`
-    mutation unfollowUser($following: ID!) {
-        unfollowUser(following: $following) {
+    mutation unfollowUser($_id: ID) {
+        unfollowUser(_id: $_id) {
             _id
+            username
+            email
         }
     }
 `

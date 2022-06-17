@@ -12,15 +12,28 @@ const typeDefs = gql`
     }
 
     type User {
-        _id: ID!
-        username: String!
-        email: String!
-        password: String!
-        dateOfBirth: Date!
-        accountStatus: String!
-        role: String!
-        followers: [ID]
-        following: [ID]
+        _id: ID
+        username: String
+        email: String
+        password: String
+        dateOfBirth: Date
+        accountStatus: String
+        role: String
+        followers: [followers]
+        following: [following]
+    }
+
+    type followers {
+        _id: ID
+        username: String
+        email: String
+       
+    }
+
+    type following {
+        _id: ID
+        username: String
+        email: String
     }
 
     type Auth {
@@ -32,6 +45,8 @@ const typeDefs = gql`
         me: User
         user(userId: ID!): User
         users: [User]
+        followers: [User]
+        following: [User]
     }
 
     type Mutation {
@@ -40,8 +55,8 @@ const typeDefs = gql`
         updatePassword(userId: ID!, oldPassword: String!, newPassword: String!, confirmationPassword: String!): User
         forgotPassword(email: String!): User
         removeUser(username: String!, password: String!): User
-        followUser(followers: ID): User
-        unfollowUser(following: ID): User
+        followUser(_id: ID): following
+        unfollowUser(_id: ID): following
 
     }
 `

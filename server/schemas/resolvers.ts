@@ -1,9 +1,9 @@
 import { AuthenticationError } from "apollo-server-core";
 import { GraphQLScalarType, Kind } from "graphql";
 import User from '../models/User';
-import { signToken, authorizedUser } from "../utils/auth";
+import { signToken } from "../utils/auth";
 import * as bcrypt from 'bcrypt';
-import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
+// import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
 
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
@@ -25,7 +25,7 @@ const dateScalar = new GraphQLScalarType({
 const resolvers = {
     Date: dateScalar,
     Query: {
-        users: async (parent: unknown, context: any) => {
+        users: async () => {
             return await User.find()
         },
         user: async (parent: unknown, { userId }: any) => {
@@ -34,10 +34,17 @@ const resolvers = {
         },
         me: async (parent: unknown, args: any, context: any) => {
             if (context.user) {
-                const user = await User.findById({ _id: context.user.data._id }).populate({ path: 'followers.user', populate: 'user' })
-                console.log(user)
+                const user = await User.findById({ _id: context.user.data._id })
                 return user
             }
+        },
+        followers: async () => {
+            const follower = await User.find();
+            console.log(follower)
+            return follower
+        }, 
+        following: async () => {
+            
         }
     },
     Mutation: {
@@ -48,7 +55,7 @@ const resolvers = {
                     throw new AuthenticationError('User already exists')
                 } else {
                     const newUser = await User.create({ username, email, password, dateOfBirth });
-                    sendConfirmationEmail(username, email, newUser._id);
+                    // sendConfirmationEmail(username, email, newUser._id);
                     console.log(newUser)
                     return newUser
                 }
@@ -59,9 +66,9 @@ const resolvers = {
         login: async (parent: unknown, { username, password }: any) => {
             try {
                 const user = await User.findOne({ username });
-                if (user?.accountStatus !== 'Active') {
-                    throw new AuthenticationError('Please check your email for account confirmation.')
-                }
+                // if (user?.accountStatus !== 'Active') {
+                //     throw new AuthenticationError('Please check your email for account confirmation.')
+                // }
                 if (!user) {
                     throw new AuthenticationError('User does not exist')
                 } else {
@@ -114,7 +121,7 @@ const resolvers = {
                 if (!user) {
                     throw new AuthenticationError('User with that email does not exist')
                 }
-                sendForgotPasswordEmail(email, user._id)
+                // sendForgotPasswordEmail(email, user._id)
             } catch (error) {
                 console.error(error)  
             }
@@ -135,28 +142,27 @@ const resolvers = {
                 console.error(error)
             }
         },
-        followUser: async (parent: unknown, { followers }: any, context: any) => {
-            console.log(followers)
-            console.log(context.user)
-            const user = await User.findById(followers);
-            console.log('this is the user to follow ', user)
+        followUser: async (parent: unknown, _id: any, context: any) => {
+            const user = await User.findOne({ _id: _id});
+            console.log('this is the user', user?.username)
             const me = await User.findById({ _id: context.user.data._id })
             console.log('this is me', me)
-            me?.following.addToSet(user?.id)
+            me?.following?.push({ _id: user?._id, username: user?.username, email: user?.email })
             me?.save()
-            user?.followers.addToSet(me?._id)
+            user?.followers?.push({ _id: me?._id, username: me?.username, email: me?.email});
             user?.save()
-            console.log('people I follow', me?.following)
-            console.log('users followers', user?.followers)
-            return me;
+            return { user, me };
         },
-        unfollowUser: async (parent: unknown, { following }: any, context: any) => {
-            const user = await User.findById(following);
-            console.log('user to unfollow', user)
+        unfollowUser: async (parent: unknown, _id: any, context: any) => {
+            const user = await User.findOne({ _id: _id });
             const me = await User.findById({ _id: context.user.data._id })
             console.log('me', me)
-            me?.following.find(following)?.remove(following)
-            return me;
+            me?.following?.pull({ _id: user?._id, username: user?.username, email: user?.email })
+            me?.save()
+            user?.followers?.pull({ _id: me?._id, username: me?.username, email: me?.email});
+            user?.save();
+            console.log('this is me after removing', me)
+            return { me, user };
         }
 
     }
