@@ -1,13 +1,13 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { QUERY_USER } from '../utils/queries';
+import { VERIFY_USER } from '../utils/queries';
 import Auth from '../utils/auth';
 import Jumbotron from '../components/Jumbotron';
 
 const VerifyUser = () => {
     const { userId }: any = useParams();
-    const { data } = useQuery(QUERY_USER, {
+    const { data } = useQuery(VERIFY_USER, {
         variables: { userId: userId }
     });
     Auth.logout();

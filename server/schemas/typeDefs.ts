@@ -44,6 +44,7 @@ const typeDefs = gql`
     type Query {
         me: User
         user(userId: ID!): User
+        verifyUser(userId: ID!): User
         users: [User]
         followers: [User]
         following: [User]

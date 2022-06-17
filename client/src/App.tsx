@@ -10,6 +10,7 @@ import SignupForm from './components/forms/SignUpForm';
 import ForgotPasswordForm from './components/forms/ForgotPasswordForm';
 import LoginForm from './components/forms/LoginForm';
 import VerifyUser from './pages/VerifyUser';
+import UserProfile from './pages/UserProfile';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
@@ -48,6 +49,7 @@ function App() {
               <Route exact path='/forgotPassword' component={ForgotPasswordForm} />
               <Route exact path='/login' component={LoginForm} />
               <Route exact path='/confirm/:userId' component={VerifyUser} />
+              <Route exact path='/profile/:userId' component={UserProfile} />
             </Switch>
           </div>
         </div>

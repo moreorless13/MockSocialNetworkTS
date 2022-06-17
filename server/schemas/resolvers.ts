@@ -28,10 +28,21 @@ const resolvers = {
         users: async () => {
             return await User.find()
         },
-        user: async (parent: unknown, { userId }: any) => {
+        verifyUser: async (parent: unknown, { userId }: any) => {
             const user = await User.findByIdAndUpdate({ _id: userId }, { $set: { accountStatus: 'Active' } }, { new: true });
             return user;
         },
+        user: async (parent: unknown, { userId }: any, context: any) => {
+            console.log('i am here')
+            console.log(userId)
+            try {
+                const user = await User.findOne({ _id: userId })
+                console.log(user)
+                return user
+            } catch (error) {
+                console.error(error)
+            }
+        },  
         me: async (parent: unknown, args: any, context: any) => {
             if (context.user) {
                 const user = await User.findById({ _id: context.user.data._id })

@@ -26,6 +26,27 @@ export const QUERY_USER = gql`
         user(userId: $userId) {
             _id
             username
+            email
+            dateOfBirth
+            followers {
+                _id
+                username
+                email
+            }
+            following {
+                _id
+                username
+                email
+            }
+        }
+    }
+`
+
+export const VERIFY_USER = gql`
+    query verifyUser($userId: ID!) {
+        verifyUser(userId: $userId) {
+            _id
+            username
         }
     }
 `

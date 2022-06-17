@@ -24,6 +24,11 @@ const HomePage = () => {
     
 
     const usersMap = data?.users.map((user: any) => {
+
+        const handleClick = (event: any) => {
+            event.preventDefault()
+            window.location.assign(`/profile/${user._id}`)
+        }
         console.log(user)
         return (
             <Card className='col-2'>
@@ -31,6 +36,7 @@ const HomePage = () => {
                     <Card.Title key={user?.username}>{user.username}</Card.Title>
                     <Card.Subtitle>{user.email}</Card.Subtitle>
                     <Card.Text>{user.accountStatus}</Card.Text>
+                    <Button onClick={handleClick}>{user?.username}'s Profile</Button>
                 </Card.Body>
                 <Card.Footer><FollowUserButton _id={user._id} /></Card.Footer>
             </Card>
