@@ -31,7 +31,7 @@ const HomePage = () => {
         }
         console.log(user)
         return (
-            <Card className='col-2'>
+            <Card>
                 <Card.Body id={user?._id} key={user?._id}>
                     <Card.Title key={user?.username}>{user.username}</Card.Title>
                     <Card.Subtitle>{user.email}</Card.Subtitle>
@@ -48,7 +48,7 @@ const HomePage = () => {
         return (
             <Jumbotron>
                 <h1>Welcome back, {myUsername}!</h1>
-                <div className='row'>{usersMap}</div>
+                <div className='row justify-content-center'>{usersMap}</div>
                 <br />
                 <div className='row'>
                     <div>
@@ -63,7 +63,7 @@ const HomePage = () => {
     } else {
         return (
             <Jumbotron>
-                <LoginForm />
+                <SignupForm />
             </Jumbotron>
         )
     }
