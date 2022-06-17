@@ -44,7 +44,7 @@ const schema = new Schema<IUser, UserModel, UserMethods>({
         default: 'Pending'
     },
     role: { type: String, required: true, enum: ['Admin', 'User'], default: 'User' },  
-    followers: [{ _id: String, username: String, email: String }],
+    followers: [{ username: String, email: String }],
     following: [{ username: String, email: String }]
 }, { timestamps: true });
 

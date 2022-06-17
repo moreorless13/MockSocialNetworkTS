@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Auth from '../utils/auth'
 import { useQuery } from '@apollo/client';
-import { QUERY_USERS } from '../utils/queries';
+import { QUERY_USERS, QUERY_FILTER_USERS } from '../utils/queries';
 import LoginForm from '../components/forms/LoginForm';
 import SignupForm from '../components/forms/SignUpForm';
 import ForgotPasswordForm from '../components/forms/ForgotPasswordForm';
@@ -17,13 +17,13 @@ const HomePage = () => {
     const [show, setShow] = useState(false);
     const handleShowRemoveAccount = () => setShow(true)
     const handleCloseRemoveAccount = () => setShow(false)
-    const { data } = useQuery(QUERY_USERS);
- 
+    const { data } = useQuery(QUERY_FILTER_USERS);
+    console.log(data)
     
    
     
 
-    const usersMap = data?.users.map((user: any) => {
+    const usersMap = data?.filterUsers.map((user: any) => {
 
         const handleClick = (event: any) => {
             event.preventDefault()

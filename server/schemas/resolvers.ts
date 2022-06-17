@@ -25,8 +25,30 @@ const dateScalar = new GraphQLScalarType({
 const resolvers = {
     Date: dateScalar,
     Query: {
-        users: async () => {
+        users: async (parent: unknown, context: any) => {
             return await User.find()
+        },
+        filterUsers: async (parent: unknown, args: any, context: any) => {
+            if (context.user) {
+                try {
+                    console.log(context.user.data)
+                    const user = await User.findById({ _id: context.user.data._id })
+                    
+                    const userFollows = user?.following;
+                    console.log(userFollows)
+                    const allUsers = await User.find()
+                    console.log(allUsers);
+                    
+
+         
+                    return allUsers
+                } catch (error) {
+                    console.error(error)
+                }
+            } else {
+                return await User.find()
+            }
+            
         },
         verifyUser: async (parent: unknown, { userId }: any) => {
             const user = await User.findByIdAndUpdate({ _id: userId }, { $set: { accountStatus: 'Active' } }, { new: true });

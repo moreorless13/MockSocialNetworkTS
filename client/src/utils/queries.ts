@@ -51,6 +51,26 @@ export const VERIFY_USER = gql`
     }
 `
 
+export const QUERY_FILTER_USERS = gql`
+    query filterUsers {
+        filterUsers {
+            _id
+            username
+            email
+            followers {
+                _id
+                username
+                email
+            }
+            following {
+                _id 
+                username
+                email
+            }
+        }
+    }
+`
+
 export const QUERY_ME = gql`
     {
         me {

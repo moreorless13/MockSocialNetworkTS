@@ -46,6 +46,7 @@ const typeDefs = gql`
         user(userId: ID!): User
         verifyUser(userId: ID!): User
         users: [User]
+        filterUsers: [User]
         followers: [User]
         following: [User]
     }
