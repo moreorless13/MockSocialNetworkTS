@@ -26,10 +26,9 @@ const FollowUserButton = ({ _id }: any) => {
             console.error(error)
         }
     }
-
     return (
         <div>
-            <Button variant='primary' onClick={handleFollowClick} disabled={disabled}>Follow</Button>
+            <Button variant='primary' onClick={handleFollowClick} disabled={disabled} >Follow</Button>
         </div>
     )
 }

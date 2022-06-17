@@ -7,7 +7,6 @@ const UnfollowUserButton = ({ _id }: any) => {
     const [disabled, setDisabled] = useState(false);
     const [unfollowUser, { error }] = useMutation(UNFOLLOW_USER);
 
-    
     useEffect(() => {
         if (error) {
             setDisabled(true);

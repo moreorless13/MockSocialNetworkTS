@@ -14,15 +14,10 @@ import FollowUserButton from '../components/buttons/FollowUnFollow';
 
 const HomePage = () => {
     const [myUsername, setMyUsername] = useState(localStorage.getItem('username'))
-    const [show, setShow] = useState(false);
-    const handleShowRemoveAccount = () => setShow(true)
-    const handleCloseRemoveAccount = () => setShow(false)
+
     const { data } = useQuery(QUERY_FILTER_USERS);
     console.log(data)
     
-   
-    
-
     const usersMap = data?.filterUsers.map((user: any) => {
 
         const handleClick = (event: any) => {
@@ -51,12 +46,7 @@ const HomePage = () => {
                 <div className='row justify-content-center'>{usersMap}</div>
                 <br />
                 <div className='row'>
-                    <div>
-                        <Button onClick={() => handleShowRemoveAccount()} variant='danger'>Delete Account</Button>
-                        <Modal show={show} onHide={handleCloseRemoveAccount}>
-                            <DeleteAccount />
-                        </Modal>
-                    </div>
+
                 </div>
             </Jumbotron>
         )

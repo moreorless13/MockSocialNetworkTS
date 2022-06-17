@@ -59,6 +59,7 @@ const typeDefs = gql`
         removeUser(username: String!, password: String!): User
         followUser(_id: ID): following
         unfollowUser(_id: ID): following
+        removeFollower(_id: ID): followers
 
     }
 `

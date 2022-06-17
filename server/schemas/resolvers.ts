@@ -189,12 +189,21 @@ const resolvers = {
         unfollowUser: async (parent: unknown, _id: any, context: any) => {
             const user = await User.findOne({ _id: _id });
             const me = await User.findById({ _id: context.user.data._id })
-            console.log('me', me)
             me?.following?.pull({ _id: user?._id, username: user?.username, email: user?.email })
             me?.save()
             user?.followers?.pull({ _id: me?._id, username: me?.username, email: me?.email});
             user?.save();
-            console.log('this is me after removing', me)
+            return { me, user };
+        },
+        removeFollower: async (parent: unknown, _id: any, context: any) => {
+            const user = await User.findOne({ _id: _id });
+            console.log(user);
+            const me = await User.findById({ _id: context.user.data._id });
+            console.log(me);
+            me?.followers?.pull({ _id: user?._id, username: user?.username, email: user?.email });
+            me?.save()
+            user?.following?.pull({ _id: me?._id, username: me?.username, email: me?.email });
+            user?.save()
             return { me, user };
         }
 

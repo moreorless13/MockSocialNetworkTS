@@ -66,3 +66,12 @@ export const UNFOLLOW_USER = gql`
         }
     }
 `
+export const REMOVE_FOLLOWER = gql`
+    mutation removeFollower($_id: ID) {
+        removeFollower(_id: $_id) {
+            _id
+            username
+            email
+        }
+    }
+`

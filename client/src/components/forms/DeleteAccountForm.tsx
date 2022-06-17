@@ -25,7 +25,7 @@ const DeleteAccount = () => {
 
     const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const form = event.currentTarget; 
+        const form: HTMLFormElement = event.currentTarget; 
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
