@@ -2,6 +2,9 @@ import { gql } from 'apollo-server-express';
 
 const typeDefs = gql`
     scalar Date
+    scalar ObjectId
+
+    
     input UserInput {
         username: String!
         email: String!

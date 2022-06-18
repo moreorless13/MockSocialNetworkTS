@@ -3,6 +3,30 @@ import { GraphQLScalarType, Kind } from "graphql";
 import User, { Ifollowers, Ifollowing } from '../models/User';
 import { signToken } from "../utils/auth";
 import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
+import { ObjectId } from 'mongodb'
+
+const ObjectIdScalar = new GraphQLScalarType({
+    name: "ObjectId",
+    description: "Mongo ObjectId scalar type",
+    serialize(value: unknown): string {
+        if(!(value instanceof ObjectId)) {
+            throw new Error('ObjectIdScalar cna only serialize ObjectId values')
+        }
+        return value.toHexString();
+    },
+    parseValue(value: unknown): ObjectId {
+        if (typeof value !== "string") {
+            throw new Error('ObjectIdScalar can only parse string values');
+        }
+        return new ObjectId(value)
+    },
+    parseLiteral(ast): ObjectId {
+        if (ast.kind !== Kind.STRING) {
+            throw new Error("ObjectIdScalar can only parse string values")
+        }
+        return new ObjectId(ast.value)
+    }
+});
 
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
@@ -23,6 +47,7 @@ const dateScalar = new GraphQLScalarType({
 
 const resolvers = {
     Date: dateScalar,
+    ObjectId: ObjectIdScalar,
     Query: {
         users: async (parent: unknown, context: any) => {
             return await User.find()
