@@ -1,14 +1,11 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
-import { QUERY_USER } from '../utils/queries';
+import { QUERY_USER } from '../../utils/queries';
 import { useParams } from 'react-router-dom';
-import Jumbotron from '../components/Jumbotron';
-import FollowUserButton from '../components/buttons/FollowUnFollow';
-import { Card, Nav } from 'react-bootstrap';
-import ProfilePageContainer from '../components/ProfilePageContainer';
+import FollowUserButton from '../../components/buttons/FollowUnFollow';
+import { Card } from 'react-bootstrap'
 
-
-const UserProfile = () => {
+const FollowersTab = () => {
     const { userId }: any = useParams();
     const { data } = useQuery(QUERY_USER, {
         variables: { userId: userId }
@@ -28,16 +25,14 @@ const UserProfile = () => {
             </Card>
         )
     })
-    console.log('mapped users', userFollowers)
-    
 
     return (
-        <Jumbotron>
-            <div className='row justify-content-center'>Welcome to {user?.username}'s Profile Page</div>
+        <div>
+            <div className='row justify-content-center'>{user?.username}'s Followers: </div>
             <br />
-            <ProfilePageContainer />
-        </Jumbotron>
+            <div className='row justify-content-center'>{userFollowers}</div> 
+        </div>
     )
 }
 
-export default UserProfile;
+export default FollowersTab;

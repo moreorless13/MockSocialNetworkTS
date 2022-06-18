@@ -36,7 +36,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Router>
+      <Router forceRefresh={true}>
         <div className='container-fluid'>
           <div className='container-fluid'>
             <NavigationBar />
