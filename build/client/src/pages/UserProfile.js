@@ -11,6 +11,7 @@ const Jumbotron_1 = __importDefault(require("../components/Jumbotron"));
 const FollowUnFollow_1 = __importDefault(require("../components/buttons/FollowUnFollow"));
 const react_bootstrap_1 = require("react-bootstrap");
 const ProfilePageContainer_1 = __importDefault(require("../components/ProfilePageContainer"));
+const auth_1 = __importDefault(require("../utils/auth"));
 const UserProfile = () => {
     var _a;
     const { userId } = (0, react_router_dom_1.useParams)();
@@ -24,6 +25,6 @@ const UserProfile = () => {
         return ((0, jsx_runtime_1.jsxs)(react_bootstrap_1.Card, Object.assign({ className: 'justify-content-center' }, { children: [(0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Header, { children: follower === null || follower === void 0 ? void 0 : follower.username }), (0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Body, { children: (0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Subtitle, { children: (0, jsx_runtime_1.jsx)("p", { children: follower.email }) }) }), (0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Footer, { children: (0, jsx_runtime_1.jsx)(FollowUnFollow_1.default, { _id: follower === null || follower === void 0 ? void 0 : follower._id }) })] })));
     });
     console.log('mapped users', userFollowers);
-    return ((0, jsx_runtime_1.jsxs)(Jumbotron_1.default, { children: [(0, jsx_runtime_1.jsxs)("div", Object.assign({ className: 'row justify-content-center' }, { children: ["Welcome to ", user === null || user === void 0 ? void 0 : user.username, "'s Profile Page"] })), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)(ProfilePageContainer_1.default, {})] }));
+    return (auth_1.default.loggedIn() ? ((0, jsx_runtime_1.jsxs)(Jumbotron_1.default, { children: [(0, jsx_runtime_1.jsxs)("div", Object.assign({ className: 'row justify-content-center' }, { children: ["Welcome to ", user === null || user === void 0 ? void 0 : user.username, "'s Profile Page"] })), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)(ProfilePageContainer_1.default, {})] })) : ((0, jsx_runtime_1.jsxs)(Jumbotron_1.default, { children: [(0, jsx_runtime_1.jsx)("h3", { children: "Please Login or sign up to view this account!" }), (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, Object.assign({ to: '/login' }, { children: "Login" })), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)(react_router_dom_1.Link, Object.assign({ to: '/signup' }, { children: "Sign Up" }))] })));
 };
 exports.default = UserProfile;

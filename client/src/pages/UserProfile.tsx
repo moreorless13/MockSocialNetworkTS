@@ -1,11 +1,12 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import { QUERY_USER } from '../utils/queries';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Jumbotron from '../components/Jumbotron';
 import FollowUserButton from '../components/buttons/FollowUnFollow';
 import { Card } from 'react-bootstrap';
 import ProfilePageContainer from '../components/ProfilePageContainer';
+import Auth from '../utils/auth'
 
 
 const UserProfile = () => {
@@ -32,11 +33,22 @@ const UserProfile = () => {
     
 
     return (
-        <Jumbotron>
-            <div className='row justify-content-center'>Welcome to {user?.username}'s Profile Page</div>
-            <br />
-            <ProfilePageContainer />
-        </Jumbotron>
+        Auth.loggedIn() ? (
+            <Jumbotron>
+                <div className='row justify-content-center'>Welcome to {user?.username}'s Profile Page</div>
+                <br />
+                <ProfilePageContainer />
+            </Jumbotron>
+        ) : (
+            <Jumbotron>
+                <h3>Please Login or sign up to view this account!</h3>
+                <Link to='/login'>Login</Link>
+                <br />
+                <Link to='/signup'>Sign Up</Link>
+            </Jumbotron>
+
+        )
+
     )
 }
 

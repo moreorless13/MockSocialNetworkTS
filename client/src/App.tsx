@@ -4,7 +4,6 @@ import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import HomePage from './pages/Home';
 import NavigationBar from './components/Nav';
-import NavBar from './components/NavBar';
 import UsersPage from './pages/UsersPage';
 import SignupForm from './components/forms/SignUpForm';
 import ForgotPasswordForm from './components/forms/ForgotPasswordForm';

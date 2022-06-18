@@ -54,26 +54,35 @@ const UsersPage = () => {
             </Card>
         )
     })
-
     return (
-        <Jumbotron>
-            <div className='row justify-content-end'>
-                <div>
-                    <Button onClick={() => handleShowRemoveAccount()} variant='danger'>Delete Account</Button>
-                        <Modal show={show} onHide={handleCloseRemoveAccount}>
-                            <DeleteAccount />
-                        </Modal>
-                </div>
-           </div>
-            <h6>My Followers: </h6>
-           <div className='row justify-content-center'>
-            {myFollowers}
+        Auth.loggedIn() ? (
+            
+            <Jumbotron>
+                <div className='row justify-content-end'>
+                    <div>
+                        <Button onClick={() => handleShowRemoveAccount()} variant='danger'>Delete Account</Button>
+                            <Modal show={show} onHide={handleCloseRemoveAccount}>
+                                <DeleteAccount />
+                            </Modal>
+                    </div>
             </div>
-           <h6>Who I Follow: </h6>
-           <div className='row justify-content-center'>{whoIFollow}</div>
-           
-        </Jumbotron>
+                <h6>My Followers: </h6>
+            <div className='row justify-content-center'>
+                {myFollowers}
+                </div>
+            <h6>Who I Follow: </h6>
+            <div className='row justify-content-center'>{whoIFollow}</div>
+            
+            </Jumbotron>
+
+        ) : (
+            <Jumbotron>
+                <h3> You Are not authorized</h3>
+            </Jumbotron>
+        )
     )
+
+    
 
 }
 export default UsersPage;
