@@ -16,7 +16,7 @@ const FollowersTab = () => {
     const userFollowers = user?.followers?.map((follower: any) => {
         console.log(follower)
         return (
-            <Card className='col-2 justify-content-center'>
+            <Card className='justify-content-center'>
                 <Card.Header>{follower?.username}</Card.Header>
                 <Card.Body>
                     <Card.Subtitle><p>{follower.email}</p></Card.Subtitle>

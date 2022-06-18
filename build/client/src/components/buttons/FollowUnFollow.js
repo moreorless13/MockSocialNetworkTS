@@ -36,6 +36,7 @@ const FollowUserButton = ({ _id }) => {
         catch (error) {
             console.error(error);
         }
+        setDisabled(true);
     });
     return ((0, jsx_runtime_1.jsx)("div", { children: (0, jsx_runtime_1.jsx)(react_bootstrap_1.Button, Object.assign({ variant: 'primary', onClick: handleFollowClick, disabled: disabled }, { children: "Follow" })) }));
 };

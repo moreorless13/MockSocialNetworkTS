@@ -24,7 +24,7 @@ const UsersPage = () => {
             window.location.assign(`/profile/${follower._id}`)
         }
         return (
-            <Card className='col-2'>
+            <Card>
                 <Card.Body>
                     <Card.Title>{follower.username}</Card.Title>
                     <Card.Subtitle>{follower.email}</Card.Subtitle>
@@ -43,7 +43,7 @@ const UsersPage = () => {
             window.location.assign(`/profile/${following._id}`)
         }
         return (
-            <Card className='col-2'>
+            <Card>
                 <Card.Body>
                     <Card.Title>{following.username}</Card.Title>
                     <Card.Subtitle>{following.email}</Card.Subtitle>

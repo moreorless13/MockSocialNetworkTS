@@ -32,15 +32,18 @@ const NavigationBar = () => {
             <header>
                 <Navbar expand='lg' className='p-3 bg-dark text-white' fixed='top'>
                     <Container>
-                        <Navbar.Brand className='text-white' href='/'>Home</Navbar.Brand>
-                        <Nav>
-                            <Nav.Item>
-                                <Nav.Link href='/signup' className='text-white'>Sign Up</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link href='/login' className='text-white'>Login</Nav.Link>
-                            </Nav.Item>
-                        </Nav>
+                        <Navbar.Brand className='text-white justify-content-start' href='/'>Home</Navbar.Brand>
+                        <Navbar.Toggle aria-controls='basic-navbar-nav' className='justify-content-end' />
+                        <Navbar.Collapse id='basic-navbar-nav' className='justify-content-end'>
+                            <Nav>
+                                <Nav.Item>
+                                    <Nav.Link href='/signup' className='text-white'>Sign Up</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link href='/login' className='text-white'>Login</Nav.Link>
+                                </Nav.Item>
+                            </Nav>
+                        </Navbar.Collapse>
                     </Container>
                 </Navbar>
             </header>

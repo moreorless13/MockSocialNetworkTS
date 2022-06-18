@@ -28,7 +28,6 @@ const typeDefs = (0, apollo_server_express_1.gql) `
         _id: ID
         username: String
         email: String
-       
     }
 
     type following {

@@ -71,15 +71,16 @@ const LoginForm = () => {
                         <Form.Control.Feedback type='invalid'>Password is required!</Form.Control.Feedback>
                     </Form.Group>
                     <br />
-                    <div className='row'>
-                        <div className='col-3'></div>
-                        <Button  className='padding bg-dark rounded col-1' disabled={!(userFormData.username && userFormData.password)} type='submit' variant='success'>Submit</Button>
+                    <div className='row justify-content-center'>
+                        <Button  className='padding bg-dark rounded justify-content-center' disabled={!(userFormData.username && userFormData.password)} type='submit' variant='success'>Submit</Button>
+                    </div>
+                    <br />
+                    <div className='row justify-content-center'>
                         <ForgotPasswordForm />
                     </div>
                 </Form>
                 <br />
-                <br />
-                <Link to="/signup">Sign up</Link>
+                <Link to="/signup"> Sign up</Link>
             </div>
         </Jumbotron>
     );

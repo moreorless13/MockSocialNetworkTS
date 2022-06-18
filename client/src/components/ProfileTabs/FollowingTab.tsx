@@ -10,13 +10,12 @@ const FollowingTab = () => {
     const { data } = useQuery(QUERY_USER, {
         variables: { userId: userId }
     });
-    // console.log(data)
     const user = data?.user;
 
     const userFollowing = user?.following?.map((follows: any) => {
         console.log(follows)
         return (
-            <Card className='col-2 justify-content-center'>
+            <Card className='justify-content-center'>
                 <Card.Header>{follows?.username}</Card.Header>
                 <Card.Body>
                     <Card.Subtitle><p>{follows.email}</p></Card.Subtitle>

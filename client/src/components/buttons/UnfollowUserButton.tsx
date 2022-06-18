@@ -25,6 +25,8 @@ const UnfollowUserButton = ({ _id }: any) => {
         } catch (error) {
             console.error(error)
         }
+
+        setDisabled(true)
     }
 
     return (
