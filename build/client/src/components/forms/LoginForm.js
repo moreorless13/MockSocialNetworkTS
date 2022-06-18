@@ -23,7 +23,7 @@ const Jumbotron_1 = __importDefault(require("../Jumbotron"));
 const auth_1 = __importDefault(require("../../utils/auth"));
 const LoginForm = () => {
     const [userFormData, setUserFormData] = (0, react_1.useState)({ username: '', password: '' });
-    const [validated] = (0, react_1.useState)(false);
+    const [validated, setValidated] = (0, react_1.useState)(false);
     const [showAlert, setShowAlert] = (0, react_1.useState)(false);
     const [login, { error }] = (0, client_1.useMutation)(mutations_1.LOGIN_USER);
     (0, react_1.useEffect)(() => {
@@ -45,6 +45,7 @@ const LoginForm = () => {
             event.preventDefault();
             event.stopPropagation();
         }
+        setValidated(true);
         try {
             const { data } = yield login({
                 variables: Object.assign({}, userFormData),
