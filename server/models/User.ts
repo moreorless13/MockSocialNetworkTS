@@ -3,7 +3,7 @@ import { Schema, model, Types, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
 
 export interface Ifollowers {
-    _id: string;
+    _id: Types.ObjectId;
     username: string;
     email: string;
 }
@@ -43,8 +43,8 @@ const schema = new Schema<IUser, UserModel, UserMethods>({
         default: 'Pending'
     },
     role: { type: String, required: true, enum: ['Admin', 'User'], default: 'User' },  
-    followers: [{ username: String, email: String }],
-    following: [{ username: String, email: String }]
+    followers: [{ _id: Types.ObjectId, username: String, email: String }],
+    following: [{ _id: Types.ObjectId, username: String, email: String }]
 }, { timestamps: true });
 
 schema.pre('save', async function (next: any) {

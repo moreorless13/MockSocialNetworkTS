@@ -1,8 +1,9 @@
 import { AuthenticationError } from "apollo-server-core";
 import { GraphQLScalarType, Kind } from "graphql";
-import User from '../models/User';
+import User, { Ifollowers, Ifollowing } from '../models/User';
 import { signToken } from "../utils/auth";
 import * as bcrypt from 'bcrypt';
+import { Types } from "mongoose";
 // import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
 
 const dateScalar = new GraphQLScalarType({
@@ -31,17 +32,36 @@ const resolvers = {
         filterUsers: async (parent: unknown, args: any, context: any) => {
             if (context.user) {
                 try {
-                    console.log(context.user.data)
-                    const user = await User.findById({ _id: context.user.data._id })
-                    
-                    const userFollows = user?.following;
-                    console.log(userFollows)
+                    const me = await User.findById({ _id: context.user.data._id })
                     const allUsers = await User.find()
-                    console.log(allUsers);
-                    
+                    const filteredUsers = allUsers.filter((user: any) => {
+                        const iFollow = me?.following?.map((following: any) => {
+                            if(user?._id == following?.id) {
+                                return null;
+                            } else {
+                                return user;
+                            }
+                        })
+                        if (iFollow?.includes(null)) {
+                            iFollow?.filter((user: any) => {
+                                return !null
+                            })
+                        } else {
+                            console.log(iFollow)
+                            return user;
+                        }  
+                    })
+                    console.log('filtered list', filteredUsers)
 
-         
-                    return allUsers
+                    const filterMe = filteredUsers.filter((user: any) => {
+                        if (me?.id == user?._id) {
+                            return;
+                        } else {
+                            return user;
+                        }
+                    })
+                    console.log(filterMe)         
+                    return filterMe
                 } catch (error) {
                     console.error(error)
                 }
