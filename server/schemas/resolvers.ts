@@ -2,9 +2,7 @@ import { AuthenticationError } from "apollo-server-core";
 import { GraphQLScalarType, Kind } from "graphql";
 import User, { Ifollowers, Ifollowing } from '../models/User';
 import { signToken } from "../utils/auth";
-import * as bcrypt from 'bcrypt';
-import { Types } from "mongoose";
-// import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
+import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
 
 const dateScalar = new GraphQLScalarType({
   name: 'Date',
@@ -51,16 +49,13 @@ const resolvers = {
                             return user;
                         }  
                     })
-                    console.log('filtered list', filteredUsers)
-
                     const filterMe = filteredUsers.filter((user: any) => {
                         if (me?.id == user?._id) {
                             return;
                         } else {
                             return user;
                         }
-                    })
-                    console.log(filterMe)         
+                    })  
                     return filterMe
                 } catch (error) {
                     console.error(error)
@@ -75,11 +70,8 @@ const resolvers = {
             return user;
         },
         user: async (parent: unknown, { userId }: any, context: any) => {
-            console.log('i am here')
-            console.log(userId)
             try {
                 const user = await User.findOne({ _id: userId })
-                console.log(user)
                 return user
             } catch (error) {
                 console.error(error)
@@ -93,7 +85,7 @@ const resolvers = {
         },
         followers: async () => {
             const follower = await User.find();
-            console.log(follower)
+
             return follower
         }, 
         following: async () => {
@@ -109,7 +101,6 @@ const resolvers = {
                 } else {
                     const newUser = await User.create({ username, email, password, dateOfBirth });
                     // sendConfirmationEmail(username, email, newUser._id);
-                    console.log(newUser)
                     return newUser
                 }
             } catch (error) {
@@ -126,19 +117,9 @@ const resolvers = {
                     throw new AuthenticationError('User does not exist')
                 } else {
                     const correctPassword = await user.isCorrectPassword(password);
-                    console.log(correctPassword)
                     if(!correctPassword){
                         throw new AuthenticationError('Invalid credentials')
                     }
-
-                    // if (user.role === 'Admin') {
-                    //     const token = authorizedUser(user);
-                    //     console.log(user)
-                    //     return { token, user }
-                    // } else {
-                    //     const token = signToken(user)
-                    //     return { token, user }
-                    // }
                     const token = signToken(user)
                     return { token, user }
                 }
@@ -161,7 +142,6 @@ const resolvers = {
                 } else {
                     user.password = newPassword;
                     await user.save({ timestamps: true });
-                    
                     return user
                 }
             } catch (error) {
@@ -174,7 +154,7 @@ const resolvers = {
                 if (!user) {
                     throw new AuthenticationError('User with that email does not exist')
                 }
-                // sendForgotPasswordEmail(email, user._id)
+                sendForgotPasswordEmail(email, user._id)
             } catch (error) {
                 console.error(error)  
             }
@@ -183,7 +163,6 @@ const resolvers = {
             try {
                 if (context.user) {
                     const user = await User.findById({ _id: context.user.data._id });
-                    console.log(user)
                     const correctPassword = await user?.isCorrectPassword(password);
                     if (!correctPassword || username !== user?.username) {
                         throw new AuthenticationError('Must provide correct credentials to delete account!')
@@ -197,11 +176,8 @@ const resolvers = {
         },
         followUser: async (parent: unknown, _id: any, context: any) => {
             const user = await User.findOne({ _id: _id});
-            console.log('this is the user', user?.username)
             const me = await User.findById({ _id: context.user.data._id })
-            console.log('this is me', me)
             if (me?.following.id(user?._id)){
-                console.log('you already follow this user')
                 return { user, me }
             } else {
                 me?.following?.push({ _id: user?._id, username: user?.username, email: user?.email })
@@ -222,9 +198,7 @@ const resolvers = {
         },
         removeFollower: async (parent: unknown, _id: any, context: any) => {
             const user = await User.findOne({ _id: _id });
-            console.log(user);
             const me = await User.findById({ _id: context.user.data._id });
-            console.log(me);
             me?.followers?.pull({ _id: user?._id, username: user?.username, email: user?.email });
             me?.save()
             user?.following?.pull({ _id: me?._id, username: me?.username, email: me?.email });

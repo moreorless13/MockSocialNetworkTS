@@ -16,7 +16,7 @@ const apollo_server_core_1 = require("apollo-server-core");
 const graphql_1 = require("graphql");
 const User_1 = __importDefault(require("../models/User"));
 const auth_1 = require("../utils/auth");
-// import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
+const transporter_1 = require("../utils/transporter");
 const dateScalar = new graphql_1.GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
@@ -64,7 +64,6 @@ const resolvers = {
                             return user;
                         }
                     });
-                    console.log('filtered list', filteredUsers);
                     const filterMe = filteredUsers.filter((user) => {
                         if ((me === null || me === void 0 ? void 0 : me.id) == (user === null || user === void 0 ? void 0 : user._id)) {
                             return;
@@ -73,7 +72,6 @@ const resolvers = {
                             return user;
                         }
                     });
-                    console.log(filterMe);
                     return filterMe;
                 }
                 catch (error) {
@@ -89,11 +87,8 @@ const resolvers = {
             return user;
         }),
         user: (parent, { userId }, context) => __awaiter(void 0, void 0, void 0, function* () {
-            console.log('i am here');
-            console.log(userId);
             try {
                 const user = yield User_1.default.findOne({ _id: userId });
-                console.log(user);
                 return user;
             }
             catch (error) {
@@ -108,7 +103,6 @@ const resolvers = {
         }),
         followers: () => __awaiter(void 0, void 0, void 0, function* () {
             const follower = yield User_1.default.find();
-            console.log(follower);
             return follower;
         }),
         following: () => __awaiter(void 0, void 0, void 0, function* () {
@@ -124,7 +118,6 @@ const resolvers = {
                 else {
                     const newUser = yield User_1.default.create({ username, email, password, dateOfBirth });
                     // sendConfirmationEmail(username, email, newUser._id);
-                    console.log(newUser);
                     return newUser;
                 }
             }
@@ -143,18 +136,9 @@ const resolvers = {
                 }
                 else {
                     const correctPassword = yield user.isCorrectPassword(password);
-                    console.log(correctPassword);
                     if (!correctPassword) {
                         throw new apollo_server_core_1.AuthenticationError('Invalid credentials');
                     }
-                    // if (user.role === 'Admin') {
-                    //     const token = authorizedUser(user);
-                    //     console.log(user)
-                    //     return { token, user }
-                    // } else {
-                    //     const token = signToken(user)
-                    //     return { token, user }
-                    // }
                     const token = (0, auth_1.signToken)(user);
                     return { token, user };
                 }
@@ -192,7 +176,7 @@ const resolvers = {
                 if (!user) {
                     throw new apollo_server_core_1.AuthenticationError('User with that email does not exist');
                 }
-                // sendForgotPasswordEmail(email, user._id)
+                (0, transporter_1.sendForgotPasswordEmail)(email, user._id);
             }
             catch (error) {
                 console.error(error);
@@ -202,7 +186,6 @@ const resolvers = {
             try {
                 if (context.user) {
                     const user = yield User_1.default.findById({ _id: context.user.data._id });
-                    console.log(user);
                     const correctPassword = yield (user === null || user === void 0 ? void 0 : user.isCorrectPassword(password));
                     if (!correctPassword || username !== (user === null || user === void 0 ? void 0 : user.username)) {
                         throw new apollo_server_core_1.AuthenticationError('Must provide correct credentials to delete account!');
@@ -219,11 +202,8 @@ const resolvers = {
         followUser: (parent, _id, context) => __awaiter(void 0, void 0, void 0, function* () {
             var _a, _b;
             const user = yield User_1.default.findOne({ _id: _id });
-            console.log('this is the user', user === null || user === void 0 ? void 0 : user.username);
             const me = yield User_1.default.findById({ _id: context.user.data._id });
-            console.log('this is me', me);
             if (me === null || me === void 0 ? void 0 : me.following.id(user === null || user === void 0 ? void 0 : user._id)) {
-                console.log('you already follow this user');
                 return { user, me };
             }
             else {
@@ -247,9 +227,7 @@ const resolvers = {
         removeFollower: (parent, _id, context) => __awaiter(void 0, void 0, void 0, function* () {
             var _e, _f;
             const user = yield User_1.default.findOne({ _id: _id });
-            console.log(user);
             const me = yield User_1.default.findById({ _id: context.user.data._id });
-            console.log(me);
             (_e = me === null || me === void 0 ? void 0 : me.followers) === null || _e === void 0 ? void 0 : _e.pull({ _id: user === null || user === void 0 ? void 0 : user._id, username: user === null || user === void 0 ? void 0 : user.username, email: user === null || user === void 0 ? void 0 : user.email });
             me === null || me === void 0 ? void 0 : me.save();
             (_f = user === null || user === void 0 ? void 0 : user.following) === null || _f === void 0 ? void 0 : _f.pull({ _id: me === null || me === void 0 ? void 0 : me._id, username: me === null || me === void 0 ? void 0 : me.username, email: me === null || me === void 0 ? void 0 : me.email });

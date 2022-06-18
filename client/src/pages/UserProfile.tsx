@@ -4,7 +4,7 @@ import { QUERY_USER } from '../utils/queries';
 import { useParams } from 'react-router-dom';
 import Jumbotron from '../components/Jumbotron';
 import FollowUserButton from '../components/buttons/FollowUnFollow';
-import { Card, Nav } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import ProfilePageContainer from '../components/ProfilePageContainer';
 
 
