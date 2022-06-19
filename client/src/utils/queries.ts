@@ -88,6 +88,12 @@ export const QUERY_ME = gql`
                 username
                 email
             }
+            posts {
+                _id
+                text
+                author
+                createdAt
+            }
         }
     }
 `

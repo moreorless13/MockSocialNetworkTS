@@ -3,10 +3,11 @@ import Auth from '../utils/auth'
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
 import Jumbotron from '../components/Jumbotron';
-import { Card, Button, Modal } from 'react-bootstrap'
+import { Card, Button, Modal, Row } from 'react-bootstrap'
 import UnfollowUserButton from '../components/buttons/UnfollowUserButton';
 import DeleteAccount from '../components/forms/DeleteAccountForm';
 import RemoveFollowerButton from '../components/buttons/RemoveFollowerButton';
+import CardHeader from 'react-bootstrap/esm/CardHeader';
 
 const UsersPage = () => {
     let { data } = useQuery(QUERY_ME);
@@ -16,6 +17,18 @@ const UsersPage = () => {
     console.log(data)
     const me = data?.me;
     console.log('this is me', me)
+
+    const myPosts = me?.posts.map((post: any) => {
+        console.log(post)
+        return (
+            <Row>
+                <Card key={post?._id}>
+                    <CardHeader>{post.author}</CardHeader>
+                    <Card.Body>{post.text}</Card.Body>
+                </Card>
+            </Row>
+        )
+    })
 
     const myFollowers = me?.followers.map((follower: any) => {
         console.log(follower)
@@ -61,17 +74,19 @@ const UsersPage = () => {
                 <div className='row justify-content-end'>
                     <div>
                         <Button onClick={() => handleShowRemoveAccount()} variant='danger'>Delete Account</Button>
-                            <Modal show={show} onHide={handleCloseRemoveAccount}>
-                                <DeleteAccount />
-                            </Modal>
+                        <Modal show={show} onHide={handleCloseRemoveAccount}>
+                            <DeleteAccount />
+                        </Modal>
                     </div>
-            </div>
-                <h6>My Followers: </h6>
-            <div className='row justify-content-center'>
-                {myFollowers}
                 </div>
-            <h6>Who I Follow: </h6>
-            <div className='row justify-content-center'>{whoIFollow}</div>
+                <h5>My Posts:</h5>
+                <div className='row justify-content-center'>{myPosts}</div>
+                <h6>My Followers: </h6>
+                <div className='row justify-content-center'>
+                    {myFollowers}
+                </div>
+                <h6>Who I Follow: </h6>
+                <div className='row justify-content-center'>{whoIFollow}</div>
             
             </Jumbotron>
 

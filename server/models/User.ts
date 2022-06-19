@@ -1,6 +1,7 @@
 
 import { Schema, model, Types, Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
+import Post, { IPost } from './Post';
 
 export interface Ifollowers {
     _id: Types.ObjectId;
@@ -24,6 +25,7 @@ export interface IUser {
     role: string; 
     followers: Types.DocumentArray<Ifollowers>;
     following: Types.DocumentArray<Ifollowing>;
+    posts: Types.DocumentArray<IPost>;
 }
 
 interface UserMethods {
@@ -44,7 +46,8 @@ const schema = new Schema<IUser, UserModel, UserMethods>({
     },
     role: { type: String, required: true, enum: ['Admin', 'User'], default: 'User' },  
     followers: [{ _id: Types.ObjectId, username: String, email: String }],
-    following: [{ _id: Types.ObjectId, username: String, email: String }]
+    following: [{ _id: Types.ObjectId, username: String, email: String }],
+    posts: [Post.schema]
 }, { timestamps: true });
 
 schema.pre('save', async function (next: any) {

@@ -24,6 +24,7 @@ const typeDefs = gql`
         role: String
         followers: [followers]
         following: [following]
+        posts: [Post]
     }
 
     type followers {
@@ -36,6 +37,22 @@ const typeDefs = gql`
         _id: ID
         username: String
         email: String
+    }
+
+    type Post {
+        _id: ID
+        text: String
+        author: String
+        createdAt: Date
+        comments: [Comment]
+    }
+
+    type Comment {
+        _id: ID
+        text: String
+        author: String
+        createdAt: Date
+        owner: ID
     }
 
     type Auth {
@@ -62,6 +79,7 @@ const typeDefs = gql`
         followUser(_id: ID): following
         unfollowUser(_id: ID): following
         removeFollower(_id: ID): followers
+        addPost(text: String): Post
 
     }
 `

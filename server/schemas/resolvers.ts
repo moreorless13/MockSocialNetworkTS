@@ -4,6 +4,7 @@ import User, { Ifollowers, Ifollowing } from '../models/User';
 import { signToken } from "../utils/auth";
 import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
 import { ObjectId } from 'mongodb'
+import Post from "../models/Post";
 
 const ObjectIdScalar = new GraphQLScalarType({
     name: "ObjectId",
@@ -104,8 +105,15 @@ const resolvers = {
         },  
         me: async (parent: unknown, args: any, context: any) => {
             if (context.user) {
-                const user = await User.findById({ _id: context.user.data._id })
-                return user
+                try {
+                    const user = await User.findById({ _id: context.user.data._id })?.populate({ path: 'posts', populate: 'comments' });
+                    return user
+                } catch (error) {
+                    console.error(error)
+                }
+                
+
+                
             }
         },
         followers: async () => {
@@ -229,6 +237,21 @@ const resolvers = {
             user?.following?.pull({ _id: me?._id, username: me?.username, email: me?.email });
             user?.save()
             return { me, user };
+        },
+        addPost: async (parent: unknown, { text }: any, context: any) => {
+            if (context.user) {
+                try {
+                    const user = await User.findById({ _id: context.user.data._id })
+                    const post = await Post.create({ text: text, author: user?.username });
+                    console.log(post)
+                    user?.posts?.push(post);
+                    user?.save();
+                    console.log(user)
+                    return post;
+                } catch (error) {
+                    
+                }
+            }
         }
 
     }
