@@ -1,4 +1,4 @@
-import { CommonEvents } from 'mongodb';
+
 import { Schema, model, Model, Types } from 'mongoose';
 
 export interface IComment {

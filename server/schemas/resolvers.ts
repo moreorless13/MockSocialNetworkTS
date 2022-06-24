@@ -5,6 +5,7 @@ import { signToken } from "../utils/auth";
 import { sendConfirmationEmail, sendForgotPasswordEmail } from "../utils/transporter";
 import { ObjectId } from 'mongodb'
 import Post from "../models/Post";
+import Comment from "../models/Comment";
 
 const ObjectIdScalar = new GraphQLScalarType({
     name: "ObjectId",
@@ -51,7 +52,7 @@ const resolvers = {
     ObjectId: ObjectIdScalar,
     Query: {
         users: async (parent: unknown, context: any) => {
-            return await User.find()
+            return await User.find().populate({ path: 'posts.comments', populate: 'comments'})
         },
         filterUsers: async (parent: unknown, args: any, context: any) => {
             if (context.user) {
@@ -106,14 +107,13 @@ const resolvers = {
         me: async (parent: unknown, args: any, context: any) => {
             if (context.user) {
                 try {
-                    const user = await User.findById({ _id: context.user.data._id })?.populate({ path: 'posts', populate: 'comments' });
+                    const user = await User.findById({ _id: context.user.data._id })?.populate({ path: 'posts.comments', populate: 'comments' });
                     return user
                 } catch (error) {
                     console.error(error)
                 }
-                
-
-                
+            } else {
+                throw new AuthenticationError('You are not authorized to view this account');
             }
         },
         followers: async () => {
@@ -230,27 +230,67 @@ const resolvers = {
             return { me, user };
         },
         removeFollower: async (parent: unknown, _id: any, context: any) => {
-            const user = await User.findOne({ _id: _id });
-            const me = await User.findById({ _id: context.user.data._id });
-            me?.followers?.pull({ _id: user?._id, username: user?.username, email: user?.email });
-            me?.save()
-            user?.following?.pull({ _id: me?._id, username: me?.username, email: me?.email });
-            user?.save()
-            return { me, user };
+            if (context.user) {
+                try {
+                    const user = await User.findOne({ _id: _id });
+                    const me = await User.findById({ _id: context.user.data._id });
+                    me?.followers?.pull({ _id: user?._id, username: user?.username, email: user?.email });
+                    me?.save()
+                    user?.following?.pull({ _id: me?._id, username: me?.username, email: me?.email });
+                    user?.save()
+                    return { me, user };
+                } catch (error) {
+                    console.error(error)
+                }
+            } else {
+                throw new AuthenticationError('You are not authorized to remove followers from this account!')
+            }
         },
         addPost: async (parent: unknown, { text }: any, context: any) => {
             if (context.user) {
                 try {
                     const user = await User.findById({ _id: context.user.data._id })
                     const post = await Post.create({ text: text, author: user?.username });
-                    console.log(post)
                     user?.posts?.push(post);
                     user?.save();
-                    console.log(user)
                     return post;
                 } catch (error) {
-                    
+                    console.error(error)
                 }
+            } else {
+                throw new AuthenticationError('You are not authorized to post on this account');
+            }
+        }, 
+        removePost: async (parent: unknown, { postId }: any, context: any) => {
+            if (context.user) {
+                try {
+                    const user = await User.findById({ _id: context.user.data._id })
+                    const postToRemove = await Post.findOne({ _id: postId, author: context.user.data.username });
+                    user?.posts?.pull(postToRemove);
+                    user?.save();
+                    return postToRemove;
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                throw new AuthenticationError('You are not authorized to remove this post');
+            }
+        }, 
+        addComment: async (parent: unknown, { userId, postId, commentText }: any, context: any) => {
+            if (context.user) {
+                try {
+                    const me = await User.findById({ _id: context.user.data._id })
+                    const user = await User.findById({ _id: userId })
+                    const comment = await Comment.create({ text: commentText, author: me?.username, owner: me?._id })
+                    const postToCommentOn = user?.posts?.id(postId);
+                    postToCommentOn?.comments?.push(comment);
+                    user?.save()
+                    return comment;
+                } catch (error) {
+                    console.error(error)
+                }
+            } else {
+                throw new AuthenticationError('You are not authorized to comment on this post')
             }
         }
 

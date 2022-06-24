@@ -52,7 +52,7 @@ const typeDefs = gql`
         text: String
         author: String
         createdAt: Date
-        owner: ID
+        owner: ObjectId
     }
 
     type Auth {
@@ -80,6 +80,9 @@ const typeDefs = gql`
         unfollowUser(_id: ID): following
         removeFollower(_id: ID): followers
         addPost(text: String): Post
+        removePost(postId: ID!): Post
+        addComment(userId: ID!, postId: ID, commentText: String!): Comment
+        removeComment(postId: ID!, commentId: ID!): Post
 
     }
 `
