@@ -75,3 +75,15 @@ export const REMOVE_FOLLOWER = gql`
         }
     }
 `
+
+export const ADD_POST = gql`
+    mutation addPost($text: String!) {
+        addPost(text: $text) {
+            _id
+            text
+            author
+            createdAt
+            comments
+        }
+    }
+`
