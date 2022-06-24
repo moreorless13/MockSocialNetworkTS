@@ -10,17 +10,18 @@ const react_router_dom_1 = require("react-router-dom");
 const FollowUnFollow_1 = __importDefault(require("../../components/buttons/FollowUnFollow"));
 const react_bootstrap_1 = require("react-bootstrap");
 const FollowersTab = () => {
-    var _a;
+    var _a, _b, _c;
     const { userId } = (0, react_router_dom_1.useParams)();
     const { data } = (0, client_1.useQuery)(queries_1.QUERY_USER, {
         variables: { userId: userId }
     });
-    // console.log(data)
     const user = data === null || data === void 0 ? void 0 : data.user;
     const userFollowers = (_a = user === null || user === void 0 ? void 0 : user.followers) === null || _a === void 0 ? void 0 : _a.map((follower) => {
         console.log(follower);
         return ((0, jsx_runtime_1.jsx)(react_bootstrap_1.Col, { children: (0, jsx_runtime_1.jsxs)(react_bootstrap_1.Card, Object.assign({ className: 'justify-content-center' }, { children: [(0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Header, { children: follower === null || follower === void 0 ? void 0 : follower.username }), (0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Body, { children: (0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Subtitle, { children: (0, jsx_runtime_1.jsx)("p", { children: follower.email }) }) }), (0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Footer, { children: (0, jsx_runtime_1.jsx)(FollowUnFollow_1.default, { _id: follower === null || follower === void 0 ? void 0 : follower._id }) })] })) }));
     });
-    return ((0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsxs)("div", Object.assign({ className: 'row justify-content-center' }, { children: [user === null || user === void 0 ? void 0 : user.username, "'s Followers: "] })), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: 'row justify-content-center' }, { children: userFollowers }))] }));
+    const numberOfFollowers = (_c = (_b = data === null || data === void 0 ? void 0 : data.user) === null || _b === void 0 ? void 0 : _b.followers) === null || _c === void 0 ? void 0 : _c.length;
+    console.log(numberOfFollowers);
+    return ((0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsxs)("div", Object.assign({ className: 'row justify-content-center' }, { children: [user === null || user === void 0 ? void 0 : user.username, "'s Followers: ", numberOfFollowers] })), (0, jsx_runtime_1.jsx)("br", {}), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: 'row justify-content-center' }, { children: userFollowers }))] }));
 };
 exports.default = FollowersTab;

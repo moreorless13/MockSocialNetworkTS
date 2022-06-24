@@ -6,7 +6,7 @@ const queries_1 = require("../../utils/queries");
 const react_router_dom_1 = require("react-router-dom");
 const react_bootstrap_1 = require("react-bootstrap");
 const UsersPostsTab = () => {
-    var _a;
+    var _a, _b;
     const { userId } = (0, react_router_dom_1.useParams)();
     const { data } = (0, client_1.useQuery)(queries_1.QUERY_USER, {
         variables: { userId: userId }
@@ -23,6 +23,7 @@ const UsersPostsTab = () => {
         });
         return ((0, jsx_runtime_1.jsxs)(react_bootstrap_1.Card, Object.assign({ className: 'justify-content-center' }, { children: [(0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Header, Object.assign({ className: 'bg-primary' }, { children: post === null || post === void 0 ? void 0 : post.author }), post === null || post === void 0 ? void 0 : post.author), (0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Body, { children: post === null || post === void 0 ? void 0 : post.text }, post === null || post === void 0 ? void 0 : post.text), (0, jsx_runtime_1.jsx)(react_bootstrap_1.Card.Footer, { children: PostComments })] }), post === null || post === void 0 ? void 0 : post._id));
     });
-    return ((0, jsx_runtime_1.jsx)("div", Object.assign({ className: 'row justify-content-center' }, { children: UsersPosts })));
+    const numberOfPosts = (_b = user === null || user === void 0 ? void 0 : user.posts) === null || _b === void 0 ? void 0 : _b.length;
+    return ((0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsxs)("div", Object.assign({ className: 'row justify-content-center' }, { children: [user === null || user === void 0 ? void 0 : user.username, "'s Posts: ", (numberOfPosts === 0) ? (0, jsx_runtime_1.jsx)("div", { children: (0, jsx_runtime_1.jsx)("p", { children: "No Posts Yet" }) }) : { numberOfPosts }] })), (0, jsx_runtime_1.jsx)("div", Object.assign({ className: 'row justify-content-center' }, { children: UsersPosts }))] }));
 };
 exports.default = UsersPostsTab;
