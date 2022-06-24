@@ -38,6 +38,19 @@ export const QUERY_USER = gql`
                 username
                 email
             }
+            posts {
+                _id
+                text
+                author
+                createdAt
+                comments {
+                    _id
+                    text
+                    author
+                    createdAt
+                    owner
+                }
+            }
         }
     }
 `
@@ -93,6 +106,13 @@ export const QUERY_ME = gql`
                 text
                 author
                 createdAt
+                comments {
+                    _id
+                    text
+                    author
+                    createdAt
+                    owner
+                }
             }
         }
     }

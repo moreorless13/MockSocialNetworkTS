@@ -20,11 +20,22 @@ const UsersPage = () => {
 
     const myPosts = me?.posts.map((post: any) => {
         console.log(post)
+        const comments = post?.comments.map((comment: any) => {
+            return (
+                <Row className="mb-3">
+                    <Card key={comment?.owner}>
+                        <CardHeader className='bg-danger text-white'>{comment.author}</CardHeader>
+                        <Card.Body>{comment.text}</Card.Body>
+                    </Card>
+                </Row>
+            )
+        })
         return (
-            <Row>
+            <Row className="mb-3">
                 <Card key={post?._id}>
-                    <CardHeader>{post.author}</CardHeader>
+                    <CardHeader className='bg-primary text-white'>{post.author}</CardHeader>
                     <Card.Body>{post.text}</Card.Body>
+                    <Card.Footer>{comments}</Card.Footer>
                 </Card>
             </Row>
         )
@@ -37,7 +48,7 @@ const UsersPage = () => {
             window.location.assign(`/profile/${follower._id}`)
         }
         return (
-            <Card>
+            <Card className="mb-3">
                 <Card.Body>
                     <Card.Title>{follower.username}</Card.Title>
                     <Card.Subtitle>{follower.email}</Card.Subtitle>
