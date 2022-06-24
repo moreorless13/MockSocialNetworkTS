@@ -39,6 +39,19 @@ exports.QUERY_USER = (0, client_1.gql) `
                 username
                 email
             }
+            posts {
+                _id
+                text
+                author
+                createdAt
+                comments {
+                    _id
+                    text
+                    author
+                    createdAt
+                    owner
+                }
+            }
         }
     }
 `;
@@ -85,6 +98,19 @@ exports.QUERY_ME = (0, client_1.gql) `
                 _id
                 username
                 email
+            }
+            posts {
+                _id
+                text
+                author
+                createdAt
+                comments {
+                    _id
+                    text
+                    author
+                    createdAt
+                    owner
+                }
             }
         }
     }

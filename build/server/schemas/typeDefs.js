@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_express_1 = require("apollo-server-express");
 const typeDefs = (0, apollo_server_express_1.gql) `
     scalar Date
+    scalar ObjectId
+
+    
     input UserInput {
         username: String!
         email: String!
@@ -22,6 +25,7 @@ const typeDefs = (0, apollo_server_express_1.gql) `
         role: String
         followers: [followers]
         following: [following]
+        posts: [Post]
     }
 
     type followers {
@@ -34,6 +38,22 @@ const typeDefs = (0, apollo_server_express_1.gql) `
         _id: ID
         username: String
         email: String
+    }
+
+    type Post {
+        _id: ID
+        text: String
+        author: String
+        createdAt: Date
+        comments: [Comment]
+    }
+
+    type Comment {
+        _id: ID
+        text: String
+        author: String
+        createdAt: Date
+        owner: ObjectId
     }
 
     type Auth {
@@ -60,6 +80,10 @@ const typeDefs = (0, apollo_server_express_1.gql) `
         followUser(_id: ID): following
         unfollowUser(_id: ID): following
         removeFollower(_id: ID): followers
+        addPost(text: String): Post
+        removePost(postId: ID!): Post
+        addComment(userId: ID!, postId: ID, commentText: String!): Comment
+        removeComment(postId: ID!, commentId: ID!): Post
 
     }
 `;

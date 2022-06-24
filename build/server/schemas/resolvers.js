@@ -17,6 +17,31 @@ const graphql_1 = require("graphql");
 const User_1 = __importDefault(require("../models/User"));
 const auth_1 = require("../utils/auth");
 const transporter_1 = require("../utils/transporter");
+const mongodb_1 = require("mongodb");
+const Post_1 = __importDefault(require("../models/Post"));
+const Comment_1 = __importDefault(require("../models/Comment"));
+const ObjectIdScalar = new graphql_1.GraphQLScalarType({
+    name: "ObjectId",
+    description: "Mongo ObjectId scalar type",
+    serialize(value) {
+        if (!(value instanceof mongodb_1.ObjectId)) {
+            throw new Error('ObjectIdScalar cna only serialize ObjectId values');
+        }
+        return value.toHexString();
+    },
+    parseValue(value) {
+        if (typeof value !== "string") {
+            throw new Error('ObjectIdScalar can only parse string values');
+        }
+        return new mongodb_1.ObjectId(value);
+    },
+    parseLiteral(ast) {
+        if (ast.kind !== graphql_1.Kind.STRING) {
+            throw new Error("ObjectIdScalar can only parse string values");
+        }
+        return new mongodb_1.ObjectId(ast.value);
+    }
+});
 const dateScalar = new graphql_1.GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
@@ -35,9 +60,10 @@ const dateScalar = new graphql_1.GraphQLScalarType({
 });
 const resolvers = {
     Date: dateScalar,
+    ObjectId: ObjectIdScalar,
     Query: {
         users: (parent, context) => __awaiter(void 0, void 0, void 0, function* () {
-            return yield User_1.default.find();
+            return yield User_1.default.find().populate({ path: 'posts.comments', populate: 'comments' });
         }),
         filterUsers: (parent, args, context) => __awaiter(void 0, void 0, void 0, function* () {
             if (context.user) {
@@ -96,9 +122,18 @@ const resolvers = {
             }
         }),
         me: (parent, args, context) => __awaiter(void 0, void 0, void 0, function* () {
+            var _a;
             if (context.user) {
-                const user = yield User_1.default.findById({ _id: context.user.data._id });
-                return user;
+                try {
+                    const user = yield ((_a = User_1.default.findById({ _id: context.user.data._id })) === null || _a === void 0 ? void 0 : _a.populate({ path: 'posts.comments', populate: 'comments' }));
+                    return user;
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            else {
+                throw new apollo_server_core_1.AuthenticationError('You are not authorized to view this account');
             }
         }),
         followers: () => __awaiter(void 0, void 0, void 0, function* () {
@@ -200,39 +235,105 @@ const resolvers = {
             }
         }),
         followUser: (parent, _id, context) => __awaiter(void 0, void 0, void 0, function* () {
-            var _a, _b;
+            var _b, _c;
             const user = yield User_1.default.findOne({ _id: _id });
             const me = yield User_1.default.findById({ _id: context.user.data._id });
             if (me === null || me === void 0 ? void 0 : me.following.id(user === null || user === void 0 ? void 0 : user._id)) {
                 return { user, me };
             }
             else {
-                (_a = me === null || me === void 0 ? void 0 : me.following) === null || _a === void 0 ? void 0 : _a.push({ _id: user === null || user === void 0 ? void 0 : user._id, username: user === null || user === void 0 ? void 0 : user.username, email: user === null || user === void 0 ? void 0 : user.email });
+                (_b = me === null || me === void 0 ? void 0 : me.following) === null || _b === void 0 ? void 0 : _b.push({ _id: user === null || user === void 0 ? void 0 : user._id, username: user === null || user === void 0 ? void 0 : user.username, email: user === null || user === void 0 ? void 0 : user.email });
                 me === null || me === void 0 ? void 0 : me.save();
-                (_b = user === null || user === void 0 ? void 0 : user.followers) === null || _b === void 0 ? void 0 : _b.push({ _id: me === null || me === void 0 ? void 0 : me._id, username: me === null || me === void 0 ? void 0 : me.username, email: me === null || me === void 0 ? void 0 : me.email });
+                (_c = user === null || user === void 0 ? void 0 : user.followers) === null || _c === void 0 ? void 0 : _c.push({ _id: me === null || me === void 0 ? void 0 : me._id, username: me === null || me === void 0 ? void 0 : me.username, email: me === null || me === void 0 ? void 0 : me.email });
                 user === null || user === void 0 ? void 0 : user.save();
                 return { user, me };
             }
         }),
         unfollowUser: (parent, _id, context) => __awaiter(void 0, void 0, void 0, function* () {
-            var _c, _d;
+            var _d, _e;
             const user = yield User_1.default.findOne({ _id: _id });
             const me = yield User_1.default.findById({ _id: context.user.data._id });
-            (_c = me === null || me === void 0 ? void 0 : me.following) === null || _c === void 0 ? void 0 : _c.pull({ _id: user === null || user === void 0 ? void 0 : user._id, username: user === null || user === void 0 ? void 0 : user.username, email: user === null || user === void 0 ? void 0 : user.email });
+            (_d = me === null || me === void 0 ? void 0 : me.following) === null || _d === void 0 ? void 0 : _d.pull({ _id: user === null || user === void 0 ? void 0 : user._id, username: user === null || user === void 0 ? void 0 : user.username, email: user === null || user === void 0 ? void 0 : user.email });
             me === null || me === void 0 ? void 0 : me.save();
-            (_d = user === null || user === void 0 ? void 0 : user.followers) === null || _d === void 0 ? void 0 : _d.pull({ _id: me === null || me === void 0 ? void 0 : me._id, username: me === null || me === void 0 ? void 0 : me.username, email: me === null || me === void 0 ? void 0 : me.email });
+            (_e = user === null || user === void 0 ? void 0 : user.followers) === null || _e === void 0 ? void 0 : _e.pull({ _id: me === null || me === void 0 ? void 0 : me._id, username: me === null || me === void 0 ? void 0 : me.username, email: me === null || me === void 0 ? void 0 : me.email });
             user === null || user === void 0 ? void 0 : user.save();
             return { me, user };
         }),
         removeFollower: (parent, _id, context) => __awaiter(void 0, void 0, void 0, function* () {
-            var _e, _f;
-            const user = yield User_1.default.findOne({ _id: _id });
-            const me = yield User_1.default.findById({ _id: context.user.data._id });
-            (_e = me === null || me === void 0 ? void 0 : me.followers) === null || _e === void 0 ? void 0 : _e.pull({ _id: user === null || user === void 0 ? void 0 : user._id, username: user === null || user === void 0 ? void 0 : user.username, email: user === null || user === void 0 ? void 0 : user.email });
-            me === null || me === void 0 ? void 0 : me.save();
-            (_f = user === null || user === void 0 ? void 0 : user.following) === null || _f === void 0 ? void 0 : _f.pull({ _id: me === null || me === void 0 ? void 0 : me._id, username: me === null || me === void 0 ? void 0 : me.username, email: me === null || me === void 0 ? void 0 : me.email });
-            user === null || user === void 0 ? void 0 : user.save();
-            return { me, user };
+            var _f, _g;
+            if (context.user) {
+                try {
+                    const user = yield User_1.default.findOne({ _id: _id });
+                    const me = yield User_1.default.findById({ _id: context.user.data._id });
+                    (_f = me === null || me === void 0 ? void 0 : me.followers) === null || _f === void 0 ? void 0 : _f.pull({ _id: user === null || user === void 0 ? void 0 : user._id, username: user === null || user === void 0 ? void 0 : user.username, email: user === null || user === void 0 ? void 0 : user.email });
+                    me === null || me === void 0 ? void 0 : me.save();
+                    (_g = user === null || user === void 0 ? void 0 : user.following) === null || _g === void 0 ? void 0 : _g.pull({ _id: me === null || me === void 0 ? void 0 : me._id, username: me === null || me === void 0 ? void 0 : me.username, email: me === null || me === void 0 ? void 0 : me.email });
+                    user === null || user === void 0 ? void 0 : user.save();
+                    return { me, user };
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            else {
+                throw new apollo_server_core_1.AuthenticationError('You are not authorized to remove followers from this account!');
+            }
+        }),
+        addPost: (parent, { text }, context) => __awaiter(void 0, void 0, void 0, function* () {
+            var _h;
+            if (context.user) {
+                try {
+                    const user = yield User_1.default.findById({ _id: context.user.data._id });
+                    const post = yield Post_1.default.create({ text: text, author: user === null || user === void 0 ? void 0 : user.username });
+                    (_h = user === null || user === void 0 ? void 0 : user.posts) === null || _h === void 0 ? void 0 : _h.push(post);
+                    user === null || user === void 0 ? void 0 : user.save();
+                    return post;
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            else {
+                throw new apollo_server_core_1.AuthenticationError('You are not authorized to post on this account');
+            }
+        }),
+        removePost: (parent, { postId }, context) => __awaiter(void 0, void 0, void 0, function* () {
+            var _j;
+            if (context.user) {
+                try {
+                    const user = yield User_1.default.findById({ _id: context.user.data._id });
+                    const postToRemove = yield Post_1.default.findOne({ _id: postId, author: context.user.data.username });
+                    (_j = user === null || user === void 0 ? void 0 : user.posts) === null || _j === void 0 ? void 0 : _j.pull(postToRemove);
+                    user === null || user === void 0 ? void 0 : user.save();
+                    return postToRemove;
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            else {
+                throw new apollo_server_core_1.AuthenticationError('You are not authorized to remove this post');
+            }
+        }),
+        addComment: (parent, { userId, postId, commentText }, context) => __awaiter(void 0, void 0, void 0, function* () {
+            var _k, _l;
+            if (context.user) {
+                try {
+                    const me = yield User_1.default.findById({ _id: context.user.data._id });
+                    const user = yield User_1.default.findById({ _id: userId });
+                    const comment = yield Comment_1.default.create({ text: commentText, author: me === null || me === void 0 ? void 0 : me.username, owner: me === null || me === void 0 ? void 0 : me._id });
+                    const postToCommentOn = (_k = user === null || user === void 0 ? void 0 : user.posts) === null || _k === void 0 ? void 0 : _k.id(postId);
+                    (_l = postToCommentOn === null || postToCommentOn === void 0 ? void 0 : postToCommentOn.comments) === null || _l === void 0 ? void 0 : _l.push(comment);
+                    user === null || user === void 0 ? void 0 : user.save();
+                    return comment;
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+            else {
+                throw new apollo_server_core_1.AuthenticationError('You are not authorized to comment on this post');
+            }
         })
     }
 };

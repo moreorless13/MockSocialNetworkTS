@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.REMOVE_FOLLOWER = exports.UNFOLLOW_USER = exports.FOLLOW_USER = exports.REMOVE_USER = exports.UPDATE_PASSWORD = exports.FORGOT_PASSWORD = exports.LOGIN_USER = exports.ADD_USER = void 0;
+exports.ADD_POST = exports.REMOVE_FOLLOWER = exports.UNFOLLOW_USER = exports.FOLLOW_USER = exports.REMOVE_USER = exports.UPDATE_PASSWORD = exports.FORGOT_PASSWORD = exports.LOGIN_USER = exports.ADD_USER = void 0;
 const client_1 = require("@apollo/client");
 exports.ADD_USER = (0, client_1.gql) `
     mutation addUser($username: String!, $email: String!, $password: String!, $dateOfBirth: Date!) {
@@ -68,6 +68,17 @@ exports.REMOVE_FOLLOWER = (0, client_1.gql) `
             _id
             username
             email
+        }
+    }
+`;
+exports.ADD_POST = (0, client_1.gql) `
+    mutation addPost($text: String!) {
+        addPost(text: $text) {
+            _id
+            text
+            author
+            createdAt
+            comments
         }
     }
 `;

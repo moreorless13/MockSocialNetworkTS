@@ -31,9 +31,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const bcrypt = __importStar(require("bcrypt"));
+const Post_1 = __importDefault(require("./Post"));
 const schema = new mongoose_1.Schema({
     username: { type: String, required: true, unique: true, trim: true, minlength: 5 },
     email: { type: String, required: true, unique: true, match: [/.+@.+\..+/, 'Must match an email address'] },
@@ -46,7 +50,8 @@ const schema = new mongoose_1.Schema({
     },
     role: { type: String, required: true, enum: ['Admin', 'User'], default: 'User' },
     followers: [{ _id: mongoose_1.Types.ObjectId, username: String, email: String }],
-    following: [{ _id: mongoose_1.Types.ObjectId, username: String, email: String }]
+    following: [{ _id: mongoose_1.Types.ObjectId, username: String, email: String }],
+    posts: [Post_1.default.schema]
 }, { timestamps: true });
 schema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
