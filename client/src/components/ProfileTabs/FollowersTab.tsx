@@ -10,7 +10,6 @@ const FollowersTab = () => {
     const { data } = useQuery(QUERY_USER, {
         variables: { userId: userId }
     });
-    // console.log(data)
     const user = data?.user;
 
     const userFollowers = user?.followers?.map((follower: any) => {
@@ -28,9 +27,12 @@ const FollowersTab = () => {
         )
     })
 
+    const numberOfFollowers = data?.user?.followers?.length;
+    console.log(numberOfFollowers)
+
     return (
         <div>
-            <div className='row justify-content-center'>{user?.username}'s Followers: </div>
+            <div className='row justify-content-center'>{user?.username}'s Followers: {numberOfFollowers}</div>
             <br />
             <div className='row justify-content-center'>{userFollowers}</div> 
         </div>

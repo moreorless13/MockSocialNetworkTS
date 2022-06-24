@@ -25,9 +25,12 @@ const FollowingTab = () => {
         )
     })
 
+    const numberFollowing = user?.following?.length;
+    console.log(numberFollowing)
+
     return (
         <div>
-            <div className='row justify-content-center'>{user?.username} Follows: </div>
+            <div className='row justify-content-center'>{user?.username} Follows: {numberFollowing}</div>
             <br />
             <div className='row justify-content-center'>{userFollowing}</div> 
         </div>

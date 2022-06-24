@@ -37,9 +37,14 @@ const UsersPostsTab = () => {
             </Card>
         )
     })
+
+    const numberOfPosts = user?.posts?.length
     return (
-        <div className='row justify-content-center'>
-            {UsersPosts}
+        <div>
+            <div className='row justify-content-center'>{user?.username}'s Posts: {(numberOfPosts === 0) ?<div><p>No Posts Yet</p></div> : {numberOfPosts}}</div>
+            <div className='row justify-content-center'>
+                {UsersPosts}
+            </div>
         </div>
     )
 }
