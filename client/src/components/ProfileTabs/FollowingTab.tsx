@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { QUERY_USER } from '../../utils/queries';
 import { useParams } from 'react-router-dom';
 import FollowUserButton from '../../components/buttons/FollowUnFollow';
-import { Card } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 
 const FollowingTab = () => {
     const { userId }: any = useParams();
@@ -13,26 +13,24 @@ const FollowingTab = () => {
     const user = data?.user;
 
     const userFollowing = user?.following?.map((follows: any) => {
-        console.log(follows)
+        const handleClick = (event: any) => {
+            event.preventDefault();
+            window.location.assign(`/profile/${follows._id}`)
+        }
         return (
-            <Card className='justify-content-center'>
-                <Card.Header>{follows?.username}</Card.Header>
-                <Card.Body>
-                    <Card.Subtitle><p>{follows.email}</p></Card.Subtitle>
-                </Card.Body>
-                <Card.Footer><FollowUserButton _id={follows?._id} /></Card.Footer>
-            </Card>
+            <tr>
+                <td>{follows?.username}</td>
+                <td><Button onClick={handleClick}>{follows?.username}'s Profile</Button></td>
+                <td><FollowUserButton _id={follows?._id} /></td>
+            </tr>
         )
     })
-
     const numberFollowing = user?.following?.length;
-    console.log(numberFollowing)
-
     return (
         <div>
             <div className='row justify-content-center'>{user?.username} Follows: {numberFollowing}</div>
             <br />
-            <div className='row justify-content-center'>{userFollowing}</div> 
+            <div className='row justify-content-center'><Table striped bordered hover responsive><tbody>{userFollowing}</tbody></Table></div> 
         </div>
     )
 }
