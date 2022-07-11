@@ -83,7 +83,14 @@ export const ADD_POST = gql`
             text
             author
             createdAt
-            comments
+        }
+    }
+`
+
+export const REMOVE_POST = gql`
+    mutation removePost($postId: ObjectId) {
+        removePost(postId: $postId) {
+            _id
         }
     }
 `

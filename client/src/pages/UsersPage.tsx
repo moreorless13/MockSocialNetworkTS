@@ -3,17 +3,23 @@ import Auth from '../utils/auth'
 import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
 import Jumbotron from '../components/Jumbotron';
-import { Card, Button, Modal, Row } from 'react-bootstrap'
+import { Card, Button, Modal, Row, Col, Table } from 'react-bootstrap';
+import ModalHeader from 'react-bootstrap/ModalHeader'
 import UnfollowUserButton from '../components/buttons/UnfollowUserButton';
 import DeleteAccount from '../components/forms/DeleteAccountForm';
 import RemoveFollowerButton from '../components/buttons/RemoveFollowerButton';
 import CardHeader from 'react-bootstrap/esm/CardHeader';
+import RemovePostButton from '../components/buttons/RemovePost';
+import AddNewPost from '../components/forms/NewPostForm';
 
 const UsersPage = () => {
     let { data } = useQuery(QUERY_ME);
-    const [show, setShow] = useState(false);
-    const handleShowRemoveAccount = () => setShow(true)
-    const handleCloseRemoveAccount = () => setShow(false)
+    const [showRemoveAccount, setShowRemoveAccount] = useState(false);
+    const [showAddNewPost, setShowAddNewPost] = useState(false);
+    const handleShowRemoveAccount = () => setShowRemoveAccount(true)
+    const handleCloseRemoveAccount = () => setShowRemoveAccount(false)
+    const handleShowAddNewPost = () => setShowAddNewPost(true);
+    const handleCloseAddNewPost = () => setShowAddNewPost(false);
     console.log(data)
     const me = data?.me;
     console.log('this is me', me)
@@ -31,12 +37,14 @@ const UsersPage = () => {
             )
         })
         return (
-            <Row className="mb-3">
-                <Card key={post?._id}>
-                    <CardHeader className='bg-primary text-white'>{post.author}</CardHeader>
-                    <Card.Body>{post.text}</Card.Body>
-                    <Card.Footer>{comments}</Card.Footer>
-                </Card>
+            <Row className="mb-3 justify-content-center">
+                <Col>
+                    <Card key={post?._id}>
+                        <CardHeader className='bg-primary text-white'><Col className='ms-auto'><RemovePostButton postId={post._id} /></Col></CardHeader>
+                        <Card.Body>{post.text}</Card.Body>
+                        <Card.Footer>{comments}</Card.Footer>
+                    </Card>
+                </Col>
             </Row>
         )
     })
@@ -48,15 +56,11 @@ const UsersPage = () => {
             window.location.assign(`/profile/${follower._id}`)
         }
         return (
-            <Card className="mb-3">
-                <Card.Body>
-                    <Card.Title>{follower.username}</Card.Title>
-                    <Card.Subtitle>{follower.email}</Card.Subtitle>
-                    <br />
-                    <Button onClick={handleClick}>{follower?.username}'s Profile</Button>
-                </Card.Body>
-                <Card.Footer><RemoveFollowerButton _id={follower?._id} /></Card.Footer>
-            </Card>
+            <tr>
+                <td>{follower.username}</td>
+                <td><Button onClick={handleClick}>{follower?.username}'s Profile</Button></td>
+                <td><RemoveFollowerButton _id={follower?._id} /></td>
+            </tr>
         )
     })
 
@@ -67,15 +71,11 @@ const UsersPage = () => {
             window.location.assign(`/profile/${following._id}`)
         }
         return (
-            <Card>
-                <Card.Body>
-                    <Card.Title>{following.username}</Card.Title>
-                    <Card.Subtitle>{following.email}</Card.Subtitle>
-                    <br />
-                    <Button onClick={handleClick}>{following?.username}'s Profile</Button>
-                </Card.Body>
-                <Card.Footer><UnfollowUserButton _id={following?._id} /></Card.Footer>
-            </Card>
+            <tr>
+                <td>{following.username}</td>
+                <td><Button onClick={handleClick}>{following?.username}'s Profile</Button></td>
+                <td><RemoveFollowerButton _id={following?._id} /></td>
+            </tr>
         )
     })
     return (
@@ -85,20 +85,44 @@ const UsersPage = () => {
                 <div className='row justify-content-end'>
                     <div>
                         <Button onClick={() => handleShowRemoveAccount()} variant='danger'>Delete Account</Button>
-                        <Modal show={show} onHide={handleCloseRemoveAccount}>
+                        <Modal show={showRemoveAccount} onHide={handleCloseRemoveAccount}>
                             <DeleteAccount />
                         </Modal>
                     </div>
                 </div>
-                <h5>My Posts:</h5>
-                <div className='row justify-content-center'>{myPosts}</div>
-                <h6>My Followers: </h6>
-                <div className='row justify-content-center'>
-                    {myFollowers}
+                <div>
+                    <Row className='justify-content-center'>
+                        <Col className='justify-content-center'>
+                            <Row className='justify-content-center'>
+                                <Col xs='auto'>
+                                    <h5 className='mb-3'>My Posts:</h5>
+                                </Col>
+                                <Col xs='auto'>
+                                    <Button onClick={() => handleShowAddNewPost()} variant='outline-success'><i className="bi bi-plus"></i></Button>
+                                </Col>
+                            </Row>
+                            <Modal show={showAddNewPost} onHide={handleCloseAddNewPost}>
+                                <Modal.Header>
+                                    <Modal.Title>Add A New Post</Modal.Title>
+                                    <Button onClick={() => handleCloseAddNewPost()} variant='outline-dark'>✗</Button>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <AddNewPost />
+                                </Modal.Body>
+                            </Modal>
+                            <div>{myPosts}</div>
+
+                        </Col>
+                        <Col>
+                            <h5 className='mb-3'>My Followers: </h5>
+                            <div className='justify-content-center'><Table striped bordered hover responsive><tbody>{myFollowers}</tbody></Table></div>
+                        </Col>
+                        <Col>
+                            <h5 className='mb-3'>Who I Follow: </h5>
+                            <div className='justify-content-center'><Table striped bordered hover responsive><tbody>{whoIFollow}</tbody></Table></div>
+                        </Col>
+                    </Row>
                 </div>
-                <h6>Who I Follow: </h6>
-                <div className='row justify-content-center'>{whoIFollow}</div>
-            
             </Jumbotron>
 
         ) : (

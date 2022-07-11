@@ -40,7 +40,7 @@ const typeDefs = gql`
     }
 
     type Post {
-        _id: ID
+        _id: ObjectId
         text: String
         author: String
         createdAt: Date
@@ -80,7 +80,7 @@ const typeDefs = gql`
         unfollowUser(_id: ID): following
         removeFollower(_id: ID): followers
         addPost(text: String): Post
-        removePost(postId: ID!): Post
+        removePost(postId: ObjectId): Post
         addComment(userId: ID!, postId: ID, commentText: String!): Comment
         removeComment(postId: ID!, commentId: ID!): Post
 

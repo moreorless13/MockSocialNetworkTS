@@ -30,7 +30,7 @@ const NavigationBar = () => {
     } else {
         return (
             <header>
-                <Navbar expand='lg' className='p-3 bg-dark text-white' fixed='top'>
+                <Navbar expand='lg' className='bg-dark text-white' fixed='top'>
                     <Container>
                         <Navbar.Brand className='text-white justify-content-start' href='/'>Home</Navbar.Brand>
                         <Navbar.Toggle aria-controls='basic-navbar-nav' className='justify-content-end' />

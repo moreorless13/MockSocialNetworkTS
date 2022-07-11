@@ -19,11 +19,10 @@ const UsersNotFollowed = () => {
         }
         console.log(user)
         return (
-            <Col>
+            <Col xs="auto">
                 <Card>
                     <Card.Body id={user?._id} key={user?._id}>
                         <Card.Title key={user?.username}>{user.username}</Card.Title>
-                        <Card.Subtitle>{user.email}</Card.Subtitle>
                         <Card.Text>{user.accountStatus}</Card.Text>
                         <Button onClick={handleClick}>{user?.username}'s Profile</Button>
                     </Card.Body>
@@ -34,7 +33,7 @@ const UsersNotFollowed = () => {
     })
 
     return (
-        <Row>
+        <Row className='justify-content-center'>
             {usersMap}
         </Row>
     )

@@ -12,7 +12,7 @@ const ObjectIdScalar = new GraphQLScalarType({
     description: "Mongo ObjectId scalar type",
     serialize(value: unknown): string {
         if(!(value instanceof ObjectId)) {
-            throw new Error('ObjectIdScalar cna only serialize ObjectId values')
+            throw new Error('ObjectIdScalar can only serialize ObjectId values')
         }
         return value.toHexString();
     },
@@ -266,8 +266,24 @@ const resolvers = {
                 try {
                     const user = await User.findById({ _id: context.user.data._id })
                     const postToRemove = await Post.findOne({ _id: postId, author: context.user.data.username });
+                    // console.log("this is the post to remove", postToRemove)
+                    const postCommentsIDs = postToRemove?.comments?.map((comment: any) => {
+                        console.log(comment?._id)
+                        return comment?._id
+                    })
+                    console.log(postCommentsIDs)
+                    const commentsToDelete = postCommentsIDs?.map(async (id: ObjectId) => {
+                        console.log('deleting comment', id)
+                        let deletingComment = await Comment.findByIdAndDelete({ _id: id }) 
+                        console.log(deletingComment)
+                        return deletingComment
+                    })
+                    console.log(commentsToDelete)
+                    
+                    
                     user?.posts?.pull(postToRemove);
                     user?.save();
+                    await Post.findByIdAndDelete({ _id: postId })
                     return postToRemove;
                 } catch (error) {
                     console.error(error);
