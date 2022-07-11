@@ -40,5 +40,19 @@ const AddNewPost = () => {
 
         setNewPostData({ text: '' });
     }
+
+    return (
+        <div>
+            <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
+                <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
+                    Post must be 255 characters or less!
+                </Alert>
+                <Form.Group>
+                    <Form.Label htmlFor='text'>Post Text</Form.Label>
+                    <Form.Control type='textarea' placeholder='Post content here.' name='text' onChange={handleInputChange} value={newPostData.text} required maxLength={255} />
+                </Form.Group>
+            </Form>
+        </div>
+    )
 }
 export default AddNewPost;

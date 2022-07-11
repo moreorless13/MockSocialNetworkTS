@@ -39,9 +39,10 @@ const UsersPostsTab = () => {
     })
 
     const numberOfPosts = user?.posts?.length
+    console.log(numberOfPosts)
     return (
         <div>
-            <div className='row justify-content-center'>{user?.username}'s Posts: {(numberOfPosts === 0) ?<div><p>No Posts Yet</p></div> : {numberOfPosts}}</div>
+            <div className='row justify-content-center'>{user?.username}'s Posts: {(numberOfPosts === 0) ? <div><p>No Posts Yet</p></div> : <div><p>{numberOfPosts}</p></div>}</div>
             <div className='row justify-content-center'>
                 {UsersPosts}
             </div>

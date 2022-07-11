@@ -14,7 +14,7 @@ const UserProfile = () => {
     const { data } = useQuery(QUERY_USER, {
         variables: { userId: userId }
     });
-    // console.log(data)
+    console.log(data)
     const user = data?.user;
 
     const userFollowers = user?.followers?.map((follower: any) => {
