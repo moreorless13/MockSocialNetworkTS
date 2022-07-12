@@ -76,14 +76,13 @@ const typeDefs = gql`
         updatePassword(userId: ID!, oldPassword: String!, newPassword: String!, confirmationPassword: String!): User
         forgotPassword(email: String!): User
         removeUser(username: String!, password: String!): User
-        followUser(_id: ID): following
-        unfollowUser(_id: ID): following
-        removeFollower(_id: ID): followers
-        addPost(text: String): Post
-        removePost(postId: ObjectId): Post
-        addComment(userId: ID!, postId: ID, commentText: String!): Comment
+        followUser(_id: ID!): following
+        unfollowUser(_id: ID!): following
+        removeFollower(_id: ID!): followers
+        addPost(text: String!): Post
+        removePost(postId: ObjectId!): Post
+        addComment(userId: ID!, postId: ID!, commentText: String!): Comment
         removeComment(postId: ID!, commentId: ID!): Post
-
     }
 `
 

@@ -6,7 +6,7 @@ const uri = sanitizedConfig.MONGODB_URI;
 
 const handleConnectionError = (error: any) => {
     mongoose.connection.on('error', error => {
-        console.log(error)
+        console.error(error)
     })
 }
 
