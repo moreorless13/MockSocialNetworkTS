@@ -32,7 +32,7 @@ const DeleteAccount = () => {
         }
 
         try {
-            const { data } = await removeUser({
+            await removeUser({
                 variables: { ...userFormData },
             });
 
