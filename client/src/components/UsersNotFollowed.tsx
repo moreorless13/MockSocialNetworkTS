@@ -1,23 +1,17 @@
-import React, { useState } from 'react';
-import Auth from '../utils/auth'
+import React from 'react';
 import { useQuery } from '@apollo/client';
-import { QUERY_USERS, QUERY_FILTER_USERS } from '../utils/queries';
+import { QUERY_FILTER_USERS } from '../utils/queries';
 import FollowUserButton from '../components/buttons/FollowUnFollow';
-import Jumbotron from '../components/Jumbotron';
-import { Button, Modal, Card, Row, Col } from 'react-bootstrap'
+import { Button, Card, Row, Col } from 'react-bootstrap'
 
 
 const UsersNotFollowed = () => {
     const { data } = useQuery(QUERY_FILTER_USERS);
-    console.log(data)
-    
     const usersMap = data?.filterUsers.map((user: any) => {
-
         const handleClick = (event: any) => {
             event.preventDefault()
             window.location.assign(`/profile/${user._id}`)
         }
-        console.log(user)
         return (
             <Col xs="auto">
                 <Card>

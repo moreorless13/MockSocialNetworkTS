@@ -18,11 +18,11 @@ const RemoveFollowerButton = ({ _id }: any) => {
 
     const handleRemoveFollowerClick = async (event: any) => {
         event.preventDefault()
-        console.log(_id)
         try {
             const { data } = await removeFollower({
                 variables: { _id: _id }
             })
+            return data
         } catch (error) {
             console.error(error)
         }

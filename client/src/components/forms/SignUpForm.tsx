@@ -43,7 +43,7 @@ const SignupForm = () => {
             const { data } = await addUser({
                 variables: { ...userFormData },
             });
-
+            return data;
         } catch (error) {
             console.error(error)
         }

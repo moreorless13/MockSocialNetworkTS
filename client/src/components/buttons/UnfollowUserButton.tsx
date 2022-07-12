@@ -17,7 +17,6 @@ const UnfollowUserButton = ({ _id }: any) => {
 
     const handleUnfollowClick = async (event: any) => {
         event.preventDefault()
-        console.log(_id)
         try {
             const { data } = await unfollowUser({
                 variables: { _id: _id }  

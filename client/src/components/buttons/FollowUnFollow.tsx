@@ -21,7 +21,7 @@ const FollowUserButton = ({ _id }: any) => {
             const { data } = await followUser({
                 variables: { _id: _id }  
             })
-            console.log('this is the data', data)
+            return data;
         } catch (error) {
             console.error(error)
         }

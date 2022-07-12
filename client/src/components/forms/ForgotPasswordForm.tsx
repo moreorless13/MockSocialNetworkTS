@@ -2,7 +2,6 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert, Modal } from 'react-bootstrap';
 import { FORGOT_PASSWORD } from '../../utils/mutations';
 import { useMutation } from '@apollo/client';
-import { Link } from 'react-router-dom';
 
 const ForgotPasswordForm = () => {
     const [userFormData, setUserFormData] = useState({ email: '' });

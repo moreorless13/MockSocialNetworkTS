@@ -17,16 +17,14 @@ const RemovePostButton = ({ postId }: any) => {
 
     const handleRemovePost = async (event: any) => {
         event.preventDefault();
-        console.log(postId)
         try {
             const { data } = await removePost({
                 variables: { postId: postId }
-            })
-            console.log(data)
+            });
+            return data;
         } catch (error) {
             console.error(error)
         }
-
         window.location.reload()
     }
 
