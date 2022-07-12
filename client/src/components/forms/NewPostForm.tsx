@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, FormEvent, ChangeEvent} from 'react';
+import React, { useState, useEffect, FormEvent, ChangeEvent} from 'react';
 import { Form, Button, Alert, Col } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { ADD_POST } from '../../utils/mutations';
@@ -38,6 +38,7 @@ const AddNewPost = () => {
             const { data } = await addPost({
                 variables: { ...newPostData }
             })
+            return data;
         } catch (error) {
             console.error(error);
         }

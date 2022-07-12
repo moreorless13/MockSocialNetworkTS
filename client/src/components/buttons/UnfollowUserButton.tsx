@@ -22,6 +22,7 @@ const UnfollowUserButton = ({ _id }: any) => {
             const { data } = await unfollowUser({
                 variables: { _id: _id }  
             })
+            return data
         } catch (error) {
             console.error(error)
         }

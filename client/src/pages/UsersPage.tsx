@@ -4,7 +4,6 @@ import { useQuery } from '@apollo/client';
 import { QUERY_ME } from '../utils/queries';
 import Jumbotron from '../components/Jumbotron';
 import { Card, Button, Modal, Row, Col, Table } from 'react-bootstrap';
-import ModalHeader from 'react-bootstrap/ModalHeader'
 import UnfollowUserButton from '../components/buttons/UnfollowUserButton';
 import DeleteAccount from '../components/forms/DeleteAccountForm';
 import RemoveFollowerButton from '../components/buttons/RemoveFollowerButton';
@@ -74,7 +73,7 @@ const UsersPage = () => {
             <tr>
                 <td>{following.username}</td>
                 <td><Button onClick={handleClick}>{following?.username}'s Profile</Button></td>
-                <td><RemoveFollowerButton _id={following?._id} /></td>
+                <td><UnfollowUserButton _id={following?._id} /></td>
             </tr>
         )
     })
