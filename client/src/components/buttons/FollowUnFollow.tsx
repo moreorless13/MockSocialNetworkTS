@@ -27,6 +27,7 @@ const FollowUserButton = ({ _id }: any) => {
         }
 
         setDisabled(true)
+       
     }
     return (
         <div>

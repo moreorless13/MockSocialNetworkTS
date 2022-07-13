@@ -8,7 +8,6 @@ const HomePage = () => {
     const [myUsername, setMyUsername] = useState(localStorage.getItem('username'))
    
     if (Auth.loggedIn()) {
-        setMyUsername(localStorage.getItem('username'))
         return (
             <Jumbotron>
                 <h1>Welcome back, {myUsername}!</h1>

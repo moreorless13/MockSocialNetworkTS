@@ -12,16 +12,15 @@ import RemovePostButton from '../components/buttons/RemovePost';
 import AddNewPost from '../components/forms/NewPostForm';
 
 const UsersPage = () => {
-    let { data } = useQuery(QUERY_ME);
+    const { data } = useQuery(QUERY_ME);
+    console.log(data)
     const [showRemoveAccount, setShowRemoveAccount] = useState(false);
     const [showAddNewPost, setShowAddNewPost] = useState(false);
     const handleShowRemoveAccount = () => setShowRemoveAccount(true)
     const handleCloseRemoveAccount = () => setShowRemoveAccount(false)
     const handleShowAddNewPost = () => setShowAddNewPost(true);
     const handleCloseAddNewPost = () => setShowAddNewPost(false);
-    console.log(data)
     const me = data?.me;
-    console.log('this is me', me)
 
     const myPosts = me?.posts.map((post: any) => {
         console.log(post)
@@ -39,8 +38,8 @@ const UsersPage = () => {
             <Row className="mb-3 justify-content-center">
                 <Col>
                     <Card key={post?._id}>
-                        <CardHeader className='bg-primary text-white'><Col className='ms-auto'><RemovePostButton postId={post._id} /></Col></CardHeader>
-                        <Card.Body>{post.text}</Card.Body>
+                        <CardHeader className='bg-primary text-white'><Col className='ms-auto'><RemovePostButton postId={post?._id} /></Col></CardHeader>
+                        <Card.Body>{post?.text}</Card.Body>
                         <Card.Footer>{comments}</Card.Footer>
                     </Card>
                 </Col>

@@ -36,7 +36,7 @@ const AddNewPost = () => {
 
         try {
             const { data } = await addPost({
-                variables: { ...newPostData }
+                variables: { text: newPostData.text }
             })
             return data;
         } catch (error) {

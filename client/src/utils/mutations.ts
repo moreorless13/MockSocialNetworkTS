@@ -48,7 +48,7 @@ export const REMOVE_USER = gql`
 `
 
 export const FOLLOW_USER = gql`
-    mutation followUser($_id: ID) {
+    mutation followUser($_id: ID!) {
         followUser(_id: $_id) {
             _id
             username
@@ -58,7 +58,7 @@ export const FOLLOW_USER = gql`
 `
 
 export const UNFOLLOW_USER = gql`
-    mutation unfollowUser($_id: ID) {
+    mutation unfollowUser($_id: ID!) {
         unfollowUser(_id: $_id) {
             _id
             username
@@ -67,7 +67,7 @@ export const UNFOLLOW_USER = gql`
     }
 `
 export const REMOVE_FOLLOWER = gql`
-    mutation removeFollower($_id: ID) {
+    mutation removeFollower($_id: ID!) {
         removeFollower(_id: $_id) {
             _id
             username
@@ -88,7 +88,7 @@ export const ADD_POST = gql`
 `
 
 export const REMOVE_POST = gql`
-    mutation removePost($postId: ObjectId) {
+    mutation removePost($postId: ObjectId!) {
         removePost(postId: $postId) {
             _id
         }

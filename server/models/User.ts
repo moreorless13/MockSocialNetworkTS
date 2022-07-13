@@ -25,7 +25,7 @@ export interface IUser {
     role: string; 
     followers: Types.DocumentArray<Ifollowers>;
     following: Types.DocumentArray<Ifollowing>;
-    posts: Types.DocumentArray<IPost>;
+    posts?: Types.DocumentArray<IPost>;
 }
 
 interface UserMethods {
