@@ -292,12 +292,12 @@ const resolvers = {
                 throw new AuthenticationError('You are not authorized to remove this post');
             }
         }, 
-        addComment: async (parent: unknown, { userId, postId, commentText }: any, context: any) => {
+        addComment: async (parent: unknown, { userId, postId, text }: any, context: any) => {
             if (context.user) {
                 try {
                     const me = await User.findById({ _id: context.user.data._id })
                     const user = await User.findById({ _id: userId })
-                    const comment = await Comment.create({ text: commentText, author: me?.username, owner: me?._id })
+                    const comment = await Comment.create({ text: text, author: me?.username, owner: me?._id })
                     const postToCommentOn = user?.posts?.id(postId);
                     postToCommentOn?.comments?.push(comment);
                     user?.save()

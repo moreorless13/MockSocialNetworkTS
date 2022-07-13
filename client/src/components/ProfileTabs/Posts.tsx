@@ -1,7 +1,11 @@
-import React from 'react';
-import { Card } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Card, Button, Row, Col, Modal } from 'react-bootstrap'
+import AddNewComment from '../forms/NewCommentForm';
 
-const UsersPostsTab = ({ posts, username }: any) => {
+const UsersPostsTab = ({ posts, username, userId }: any) => {
+    const [show, setShow] = useState(false);
+    const handleShowModal = () => setShow(true);
+    const handleCloseModal = () => setShow(false);
     const UsersPosts = posts?.map((post: any) => {
         const PostComments = post?.comments.map((comment: any) => {
             console.log('these are user comments', comment)
@@ -21,7 +25,17 @@ const UsersPostsTab = ({ posts, username }: any) => {
             <Card className='justify-content-center' key={post?._id}>
                 <Card.Header className='bg-primary' key={post?.author}>{post?.author}</Card.Header>
                 <Card.Body key={post?.text}>{post?.text}</Card.Body>
-                <Card.Footer>{PostComments}</Card.Footer>
+                <Card.Footer><Row><Col>{PostComments}</Col><Col><Button onClick={handleShowModal} >Add Comment</Button></Col></Row></Card.Footer>
+                <Modal show={show} onHide={handleCloseModal}>
+                    <Modal.Header>
+                        <Modal.Title>
+                            Add Comment
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <AddNewComment userId={userId} postId={post?._id} />
+                    </Modal.Body>
+                </Modal>
             </Card>
         )
     })

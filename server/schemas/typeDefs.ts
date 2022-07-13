@@ -81,7 +81,7 @@ const typeDefs = gql`
         removeFollower(_id: ID!): followers
         addPost(text: String!): Post
         removePost(postId: ObjectId!): Post
-        addComment(userId: ID!, postId: ID!, commentText: String!): Comment
+        addComment(userId: ID!, postId: ID!, text: String!): Comment
         removeComment(postId: ID!, commentId: ID!): Post
     }
 `

@@ -3,12 +3,14 @@ import { Form, Button, Alert, Col } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { ADD_COMMENT } from '../../utils/mutations';
 
-const AddNewComment = () => {
-    const [userFormData, setUserFormData] = useState({commentText: ''});
+const AddNewComment = ({userId, postId}: any) => {
+    console.log(userId)
+    console.log(postId)
+    const [userFormData, setUserFormData] = useState({text: ''});
     const [validated, setValidated] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
 
-    const [addPost, { error }] = useMutation(ADD_COMMENT);
+    const [addComment, { error }] = useMutation(ADD_COMMENT);
 
     useEffect(() => {
         if (error) {
@@ -35,16 +37,16 @@ const AddNewComment = () => {
         setValidated(true)
 
         try {
-            const { data } = await addPost({
-                variables: { ...userFormData }
+            const { data } = await addComment({
+                variables: { userId: userId, postId: postId, text: userFormData.text }
             })
             return data;
         } catch (error) {
             console.error(error);
         }
 
-        setUserFormData({ commentText: '' });
-        window.location.reload()
+        setUserFormData({ text: '' });
+        // window.location.reload()
     }
 
     return (
@@ -56,10 +58,10 @@ const AddNewComment = () => {
                 <Form.Group className='mt-3 mb-3'>
                     <Col xs='auto'></Col>
                     <Form.Label htmlFor='text'>Post Text: </Form.Label>
-                    <Form.Control as='textarea' placeholder='Post content here.' name='text' onChange={handleInputChange} value={userFormData.commentText} required maxLength={255} />
+                    <Form.Control as='textarea' placeholder='Post content here.' name='text' onChange={handleInputChange} value={userFormData.text} required maxLength={255} />
                 </Form.Group>
                     <div className='row justify-content-center'>
-                        <Button  className='padding rounded justify-content-center mb-4' disabled={(userFormData.commentText.length >= 255 || userFormData.commentText.length < 5)} type='submit' variant='success'>Submit</Button>
+                        <Button  className='padding rounded justify-content-center mb-4' disabled={(userFormData.text.length >= 255 || userFormData.text.length < 5)} type='submit' variant='success'>Submit</Button>
                     </div>
             </Form>
         </div>

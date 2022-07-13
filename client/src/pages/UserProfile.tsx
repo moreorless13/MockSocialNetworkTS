@@ -19,7 +19,7 @@ const UserProfile = () => {
             <Jumbotron>
                 <div className='row justify-content-center'>Welcome to {user?.username}'s Profile Page</div>
                 <br />
-                <ProfilePageContainer username={user?.username} posts={user?.posts} followers={user?.followers} following={user?.following} />
+                <ProfilePageContainer userId={user?._id} username={user?.username} posts={user?.posts} followers={user?.followers} following={user?.following} />
             </Jumbotron>
         ) : (
             <Jumbotron>
