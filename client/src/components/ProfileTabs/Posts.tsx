@@ -25,7 +25,7 @@ const UsersPostsTab = ({ posts, username, userId }: any) => {
             <Card className='justify-content-center' key={post?._id}>
                 <Card.Header className='bg-primary' key={post?.author}>{post?.author}</Card.Header>
                 <Card.Body key={post?.text}>{post?.text}</Card.Body>
-                <Card.Footer><Row><Col>{PostComments}</Col><Col><Button onClick={handleShowModal} >Add Comment</Button></Col></Row></Card.Footer>
+                <Card.Footer><Row><Col>{PostComments}</Col></Row><Row><Col><Button onClick={handleShowModal} >Add Comment</Button></Col></Row></Card.Footer>
                 <Modal show={show} onHide={handleCloseModal}>
                     <Modal.Header>
                         <Modal.Title>
